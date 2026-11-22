@@ -1,0 +1,23 @@
+loaded cache_margin128_span.npz: X (200, 5000), masked 26.9%
+X (200, 5000) float32, Y (200, 5000) int64, splits train 140, valid 30, test 30
+annotated span: median 3644 samples (7.3 s) of 5000, target -1 on 26.9% of the samples (Option B crops away the unlabelled edges)
+waves repaired by the parser: 14 in records [95, 104, 111]
+fraction of the ANNOTATED samples per class: {'background': np.float64(0.563), 'P': np.float64(0.108), 'QRS': np.float64(0.124), 'T': np.float64(0.205)}
+      P: 1401 waves in 176 of 200 records
+    QRS: 1831 waves in 200 of 200 records
+      T: 1642 waves in 200 of 200 records
+
+config from the validation split: {"baseline": {"params": {"band_hz": [8.0, 20.0], "distance_ms": 200, "keep_rel": 0.35, "anchor": "p90"}, "dice": {"P": 0.796, "QRS": 0.916, "T": 0.837}, "mean": 0.8495286280397027}, "data": {"margin": 128, "standardize": "span"}, "weights": "0.5", "widths": [32, 64, 128, 256, 512], "lr": 0.001, "batch_size": 16, "epochs": 75, "seed": 0}
+training on 140 records, choosing the epoch on 30 validation records; the test split stays untouched
+
+class weights: [0.489 1.136 1.048 0.815] (from the training records' frequencies only)
+
+UNet(dim=1, c_in=1, c_out=4, widths=[32, 64, 128, 256, 512]): 2,710,852 parameters
+
+75 epochs in 824 s; best validation loss 0.1581 in epoch 39
+
+                                                   P             QRS               T
+this model (validation)                  0.937 (0.906)     0.955 (0.955)     0.913 (0.910)
+  global Dice over the annotated samples, and in brackets the mean over the records that contain that wave
+
+75 epochs in 827 s; model -> results/model.pt, log -> results/train_log.json, curves -> figures/training_curves.png

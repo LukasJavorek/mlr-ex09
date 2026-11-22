@@ -1,0 +1,19 @@
+loaded cache_margin128_span.npz: X (200, 5000), masked 26.9%
+stage G - the deeper networks at the length the run trains for (75 epochs), judged on the validation split
+    the incumbent [32, 64, 128, 256] at 75 epochs: mean 0.899
+
+stage G  (judged on the validation split)
+75 epochs in 691 s; best validation loss 0.1581 in epoch 39
+    widths [32, 64, 128, 256, 512], 75 epochs mean 0.935   P 0.937  QRS 0.955  T 0.913   [693 s]
+75 epochs in 222 s; best validation loss 0.1712 in epoch 46
+    widths [16, 32, 64, 128, 256], 75 epochs mean 0.923   P 0.920  QRS 0.950  T 0.899   [222 s]
+    within 0.005 of the top: [[32, 64, 128, 256, 512]] -> the smaller one, [32, 64, 128, 256, 512]
+150 epochs in 2341 s; best validation loss 0.1581 in epoch 39
+
+the whole stage G table (mean Dice of P, QRS, T on the validation split):
+    widths [32, 64, 128, 256, 512], 75 epochs    mean 0.935   P 0.937  QRS 0.955  T 0.913
+    widths [32, 64, 128, 256, 512], 150 epochs   mean 0.935   P 0.937  QRS 0.955  T 0.913
+    widths [16, 32, 64, 128, 256], 75 epochs     mean 0.923   P 0.920  QRS 0.950  T 0.899
+    widths [32, 64, 128, 256], 75 epochs         mean 0.899   P 0.868  QRS 0.955  T 0.873
+
+chosen: widths [32, 64, 128, 256, 512], 75 epochs, batch 16 -> results/choices.json, figures/validation_choices.png

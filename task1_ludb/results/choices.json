@@ -1,0 +1,2491 @@
+{
+ "chosen": {
+  "baseline": {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.796,
+    "QRS": 0.916,
+    "T": 0.837
+   },
+   "mean": 0.8495286280397027
+  },
+  "data": {
+   "margin": 128,
+   "standardize": "span"
+  },
+  "weights": "0.5",
+  "widths": [
+   32,
+   64,
+   128,
+   256,
+   512
+  ],
+  "lr": 0.001,
+  "batch_size": 16,
+  "epochs": 75,
+  "seed": 0
+ },
+ "baseline_grid": [
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.796,
+    "QRS": 0.916,
+    "T": 0.837
+   },
+   "mean": 0.8495286280397027
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.796,
+    "QRS": 0.916,
+    "T": 0.837
+   },
+   "mean": 0.8495286280397027
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.35,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.796,
+    "QRS": 0.916,
+    "T": 0.837
+   },
+   "mean": 0.8495286280397027
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.35,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.796,
+    "QRS": 0.916,
+    "T": 0.837
+   },
+   "mean": 0.8495286280397027
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.35,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.796,
+    "QRS": 0.916,
+    "T": 0.837
+   },
+   "mean": 0.8495286280397027
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.35,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.796,
+    "QRS": 0.916,
+    "T": 0.837
+   },
+   "mean": 0.8495286280397027
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.5,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.797,
+    "QRS": 0.915,
+    "T": 0.835
+   },
+   "mean": 0.8490768568373883
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.793,
+    "QRS": 0.915,
+    "T": 0.837
+   },
+   "mean": 0.8481405833561649
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.35,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.793,
+    "QRS": 0.915,
+    "T": 0.837
+   },
+   "mean": 0.8481405833561649
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.35,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.793,
+    "QRS": 0.915,
+    "T": 0.837
+   },
+   "mean": 0.8481405833561649
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.2,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.795,
+    "QRS": 0.915,
+    "T": 0.835
+   },
+   "mean": 0.8481190709017921
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.2,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.795,
+    "QRS": 0.915,
+    "T": 0.835
+   },
+   "mean": 0.8481190709017921
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.5,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.797,
+    "QRS": 0.913,
+    "T": 0.833
+   },
+   "mean": 0.8479410501987094
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.2,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.795,
+    "QRS": 0.913,
+    "T": 0.833
+   },
+   "mean": 0.8469442855652276
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.2,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.795,
+    "QRS": 0.913,
+    "T": 0.833
+   },
+   "mean": 0.8469442855652276
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.5,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.795,
+    "QRS": 0.911,
+    "T": 0.833
+   },
+   "mean": 0.8465485454409508
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.2,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.794,
+    "QRS": 0.912,
+    "T": 0.831
+   },
+   "mean": 0.8458283994479968
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.5,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.795,
+    "QRS": 0.91,
+    "T": 0.832
+   },
+   "mean": 0.8455407742834433
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.5,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.795,
+    "QRS": 0.91,
+    "T": 0.832
+   },
+   "mean": 0.8455407742834433
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.5,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.795,
+    "QRS": 0.91,
+    "T": 0.832
+   },
+   "mean": 0.8455407742834433
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.2,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.792,
+    "QRS": 0.911,
+    "T": 0.833
+   },
+   "mean": 0.8453655039540114
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.2,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.793,
+    "QRS": 0.91,
+    "T": 0.83
+   },
+   "mean": 0.8444365029957478
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.5,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.793,
+    "QRS": 0.908,
+    "T": 0.83
+   },
+   "mean": 0.8436622034575597
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.5,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.793,
+    "QRS": 0.908,
+    "T": 0.83
+   },
+   "mean": 0.8436622034575597
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.5,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.793,
+    "QRS": 0.908,
+    "T": 0.83
+   },
+   "mean": 0.8436622034575597
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.65,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.793,
+    "QRS": 0.907,
+    "T": 0.83
+   },
+   "mean": 0.8434522876511968
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.2,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.791,
+    "QRS": 0.908,
+    "T": 0.829
+   },
+   "mean": 0.842955346189965
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.65,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.787,
+    "QRS": 0.898,
+    "T": 0.829
+   },
+   "mean": 0.8378090469400638
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.65,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.785,
+    "QRS": 0.896,
+    "T": 0.829
+   },
+   "mean": 0.8364482225632824
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.65,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.785,
+    "QRS": 0.896,
+    "T": 0.829
+   },
+   "mean": 0.8364482225632824
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.65,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.782,
+    "QRS": 0.894,
+    "T": 0.827
+   },
+   "mean": 0.8345289948467567
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.65,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.782,
+    "QRS": 0.894,
+    "T": 0.827
+   },
+   "mean": 0.8345289948467567
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.8,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.779,
+    "QRS": 0.89,
+    "T": 0.827
+   },
+   "mean": 0.8318543629774271
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.65,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.776,
+    "QRS": 0.884,
+    "T": 0.822
+   },
+   "mean": 0.8276946955723706
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.65,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.776,
+    "QRS": 0.884,
+    "T": 0.822
+   },
+   "mean": 0.8276946955723706
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.65,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.776,
+    "QRS": 0.884,
+    "T": 0.822
+   },
+   "mean": 0.8276946955723706
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.35,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.79,
+    "QRS": 0.885,
+    "T": 0.807
+   },
+   "mean": 0.8273678918473565
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.35,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.789,
+    "QRS": 0.881,
+    "T": 0.805
+   },
+   "mean": 0.8252241165204254
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.35,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.79,
+    "QRS": 0.882,
+    "T": 0.804
+   },
+   "mean": 0.8251206732930457
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.5,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.786,
+    "QRS": 0.875,
+    "T": 0.806
+   },
+   "mean": 0.8222465567606559
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.2,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.772,
+    "QRS": 0.881,
+    "T": 0.813
+   },
+   "mean": 0.8221423499511316
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.8,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.772,
+    "QRS": 0.872,
+    "T": 0.821
+   },
+   "mean": 0.8219074436871335
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.8,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.767,
+    "QRS": 0.867,
+    "T": 0.818
+   },
+   "mean": 0.817053757470071
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.5,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.784,
+    "QRS": 0.865,
+    "T": 0.801
+   },
+   "mean": 0.816370675198359
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.2,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.781,
+    "QRS": 0.873,
+    "T": 0.79
+   },
+   "mean": 0.8143607398709064
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.5,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.785,
+    "QRS": 0.858,
+    "T": 0.799
+   },
+   "mean": 0.8140422598069552
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.8,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.762,
+    "QRS": 0.861,
+    "T": 0.814
+   },
+   "mean": 0.8125750126671848
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.8,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.762,
+    "QRS": 0.861,
+    "T": 0.814
+   },
+   "mean": 0.8125750126671848
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.5,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.783,
+    "QRS": 0.857,
+    "T": 0.796
+   },
+   "mean": 0.8120223967425421
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.5,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.783,
+    "QRS": 0.857,
+    "T": 0.796
+   },
+   "mean": 0.8120223967425421
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.8,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.76,
+    "QRS": 0.857,
+    "T": 0.811
+   },
+   "mean": 0.8092353639971126
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.2,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.776,
+    "QRS": 0.868,
+    "T": 0.783
+   },
+   "mean": 0.8091911513085396
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.65,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.782,
+    "QRS": 0.85,
+    "T": 0.793
+   },
+   "mean": 0.8083609093853482
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.65,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.784,
+    "QRS": 0.844,
+    "T": 0.79
+   },
+   "mean": 0.8057266566874937
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.65,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.781,
+    "QRS": 0.84,
+    "T": 0.787
+   },
+   "mean": 0.8027009918998081
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.65,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.781,
+    "QRS": 0.84,
+    "T": 0.787
+   },
+   "mean": 0.8027009918998081
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.65,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.781,
+    "QRS": 0.84,
+    "T": 0.787
+   },
+   "mean": 0.8027009918998081
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.5,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.77,
+    "QRS": 0.854,
+    "T": 0.781
+   },
+   "mean": 0.8014367264027721
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.5,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.77,
+    "QRS": 0.854,
+    "T": 0.781
+   },
+   "mean": 0.8014367264027721
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.65,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.779,
+    "QRS": 0.838,
+    "T": 0.785
+   },
+   "mean": 0.8008058011491553
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.2,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.77,
+    "QRS": 0.859,
+    "T": 0.772
+   },
+   "mean": 0.8003410896061247
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.5,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.767,
+    "QRS": 0.857,
+    "T": 0.774
+   },
+   "mean": 0.7994301715019416
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.65,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.772,
+    "QRS": 0.834,
+    "T": 0.787
+   },
+   "mean": 0.7975228220319638
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.65,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.772,
+    "QRS": 0.834,
+    "T": 0.787
+   },
+   "mean": 0.7975228220319638
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.65,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.772,
+    "QRS": 0.834,
+    "T": 0.787
+   },
+   "mean": 0.7975228220319638
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.8,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.744,
+    "QRS": 0.844,
+    "T": 0.804
+   },
+   "mean": 0.797295361648129
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.8,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.744,
+    "QRS": 0.844,
+    "T": 0.804
+   },
+   "mean": 0.797295361648129
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.8,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.744,
+    "QRS": 0.844,
+    "T": 0.804
+   },
+   "mean": 0.797295361648129
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.5,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.761,
+    "QRS": 0.851,
+    "T": 0.766
+   },
+   "mean": 0.7926109251866095
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.8,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.767,
+    "QRS": 0.818,
+    "T": 0.783
+   },
+   "mean": 0.7892218463748074
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.8,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.768,
+    "QRS": 0.818,
+    "T": 0.78
+   },
+   "mean": 0.7888245133842732
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.35,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.76,
+    "QRS": 0.851,
+    "T": 0.747
+   },
+   "mean": 0.7858385321957716
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.35,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.759,
+    "QRS": 0.848,
+    "T": 0.746
+   },
+   "mean": 0.7845362622813709
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.35,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.758,
+    "QRS": 0.849,
+    "T": 0.745
+   },
+   "mean": 0.7840631958306248
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.8,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.756,
+    "QRS": 0.808,
+    "T": 0.784
+   },
+   "mean": 0.7824191835562623
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.8,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.747,
+    "QRS": 0.797,
+    "T": 0.783
+   },
+   "mean": 0.7754535092309268
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.8,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.747,
+    "QRS": 0.797,
+    "T": 0.783
+   },
+   "mean": 0.7754535092309268
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.8,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.747,
+    "QRS": 0.797,
+    "T": 0.783
+   },
+   "mean": 0.7754535092309268
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.8,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.738,
+    "QRS": 0.836,
+    "T": 0.725
+   },
+   "mean": 0.766070909307944
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.8,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.733,
+    "QRS": 0.781,
+    "T": 0.776
+   },
+   "mean": 0.7631927328305247
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.8,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.733,
+    "QRS": 0.781,
+    "T": 0.776
+   },
+   "mean": 0.7631927328305247
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.8,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.733,
+    "QRS": 0.781,
+    "T": 0.776
+   },
+   "mean": 0.7631927328305247
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.8,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.739,
+    "QRS": 0.829,
+    "T": 0.713
+   },
+   "mean": 0.7601297015997369
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.2,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.736,
+    "QRS": 0.821,
+    "T": 0.693
+   },
+   "mean": 0.74989336328969
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.73,
+    "QRS": 0.816,
+    "T": 0.7
+   },
+   "mean": 0.7484280079843963
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.729,
+    "QRS": 0.813,
+    "T": 0.699
+   },
+   "mean": 0.7470061992944922
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.65,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.722,
+    "QRS": 0.815,
+    "T": 0.698
+   },
+   "mean": 0.7449441119619581
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.727,
+    "QRS": 0.812,
+    "T": 0.695
+   },
+   "mean": 0.7447580991210808
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.2,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.731,
+    "QRS": 0.815,
+    "T": 0.685
+   },
+   "mean": 0.7434165733314052
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.65,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.712,
+    "QRS": 0.81,
+    "T": 0.697
+   },
+   "mean": 0.7399416993919434
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.2,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.719,
+    "QRS": 0.801,
+    "T": 0.665
+   },
+   "mean": 0.7284891610701306
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.5,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.686,
+    "QRS": 0.79,
+    "T": 0.676
+   },
+   "mean": 0.7174598553703609
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.2,
+    "anchor": "max"
+   },
+   "dice": {
+    "P": 0.705,
+    "QRS": 0.787,
+    "T": 0.646
+   },
+   "mean": 0.7125650408963802
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.5,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.685,
+    "QRS": 0.784,
+    "T": 0.667
+   },
+   "mean": 0.712025300451448
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.2,
+    "anchor": "p90"
+   },
+   "dice": {
+    "P": 0.696,
+    "QRS": 0.777,
+    "T": 0.634
+   },
+   "mean": 0.7025219675333177
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.2,
+    "anchor": "p75"
+   },
+   "dice": {
+    "P": 0.678,
+    "QRS": 0.757,
+    "T": 0.605
+   },
+   "mean": 0.6798917820946141
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.35,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.64,
+    "QRS": 0.748,
+    "T": 0.632
+   },
+   "mean": 0.6733367012849363
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.35,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.638,
+    "QRS": 0.734,
+    "T": 0.612
+   },
+   "mean": 0.6615343974669378
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.2,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.626,
+    "QRS": 0.733,
+    "T": 0.623
+   },
+   "mean": 0.6604331623983238
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.8,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.637,
+    "QRS": 0.704,
+    "T": 0.531
+   },
+   "mean": 0.6238470821711434
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.8,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.647,
+    "QRS": 0.706,
+    "T": 0.48
+   },
+   "mean": 0.6107340363659234
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 300,
+    "keep_rel": 0.2,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.594,
+    "QRS": 0.69,
+    "T": 0.527
+   },
+   "mean": 0.6038796644181068
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.65,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.611,
+    "QRS": 0.662,
+    "T": 0.474
+   },
+   "mean": 0.5823076406014289
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.65,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.613,
+    "QRS": 0.677,
+    "T": 0.445
+   },
+   "mean": 0.5782783029230625
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.8,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.607,
+    "QRS": 0.663,
+    "T": 0.42
+   },
+   "mean": 0.5631376446311035
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.5,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.567,
+    "QRS": 0.65,
+    "T": 0.429
+   },
+   "mean": 0.5487325226548644
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.5,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.566,
+    "QRS": 0.627,
+    "T": 0.446
+   },
+   "mean": 0.5465016237652311
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.65,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.579,
+    "QRS": 0.639,
+    "T": 0.388
+   },
+   "mean": 0.5354226543178485
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.8,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.513,
+    "QRS": 0.589,
+    "T": 0.441
+   },
+   "mean": 0.5144602058651628
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.35,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.505,
+    "QRS": 0.617,
+    "T": 0.413
+   },
+   "mean": 0.5115826548971502
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.35,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.512,
+    "QRS": 0.594,
+    "T": 0.427
+   },
+   "mean": 0.510966225685186
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.5,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.531,
+    "QRS": 0.612,
+    "T": 0.373
+   },
+   "mean": 0.5054006327955891
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.2,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.47,
+    "QRS": 0.594,
+    "T": 0.387
+   },
+   "mean": 0.48360890904424747
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.65,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.487,
+    "QRS": 0.55,
+    "T": 0.4
+   },
+   "mean": 0.47910965117204074
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 240,
+    "keep_rel": 0.2,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.448,
+    "QRS": 0.568,
+    "T": 0.42
+   },
+   "mean": 0.4785610406524763
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.475,
+    "QRS": 0.583,
+    "T": 0.36
+   },
+   "mean": 0.4723263523111838
+  },
+  {
+   "params": {
+    "band_hz": [
+     5.0,
+     15.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.2,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.435,
+    "QRS": 0.556,
+    "T": 0.333
+   },
+   "mean": 0.4413793331425096
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.5,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.456,
+    "QRS": 0.502,
+    "T": 0.356
+   },
+   "mean": 0.4377395041318681
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.35,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.432,
+    "QRS": 0.469,
+    "T": 0.33
+   },
+   "mean": 0.4105010074097824
+  },
+  {
+   "params": {
+    "band_hz": [
+     8.0,
+     20.0
+    ],
+    "distance_ms": 200,
+    "keep_rel": 0.2,
+    "anchor": "median"
+   },
+   "dice": {
+    "P": 0.414,
+    "QRS": 0.454,
+    "T": 0.323
+   },
+   "mean": 0.3970339424798297
+  }
+ ],
+ "stages": {
+  "A baseline band": [
+   {
+    "label": "5-15 Hz",
+    "mean": 0.7334952996602251,
+    "n": 60
+   },
+   {
+    "label": "8-20 Hz",
+    "mean": 0.7697546810951046,
+    "n": 60
+   }
+  ],
+  "B crop and scaling": [
+   {
+    "label": "margin 128, span statistics",
+    "config": {
+     "margin": 128,
+     "standardize": "span"
+    },
+    "mean": 0.779744707220297,
+    "dice": {
+     "P": 0.658,
+     "QRS": 0.935,
+     "T": 0.746
+    },
+    "seconds": 78.8
+   },
+   {
+    "label": "margin 0, record statistics",
+    "config": {
+     "margin": 0,
+     "standardize": "record"
+    },
+    "mean": 0.7797027096886705,
+    "dice": {
+     "P": 0.642,
+     "QRS": 0.935,
+     "T": 0.762
+    },
+    "seconds": 81.6
+   },
+   {
+    "label": "margin 250, span statistics",
+    "config": {
+     "margin": 250,
+     "standardize": "span"
+    },
+    "mean": 0.7773991579244907,
+    "dice": {
+     "P": 0.642,
+     "QRS": 0.939,
+     "T": 0.751
+    },
+    "seconds": 79.7
+   },
+   {
+    "label": "margin 0, span statistics",
+    "config": {
+     "margin": 0,
+     "standardize": "span"
+    },
+    "mean": 0.7703376736262193,
+    "dice": {
+     "P": 0.611,
+     "QRS": 0.943,
+     "T": 0.757
+    },
+    "seconds": 83.9
+   }
+  ],
+  "C loss weighting": [
+   {
+    "label": "inverse frequency to the 0.5",
+    "weights": "0.5",
+    "mean": 0.7879287092428086,
+    "dice": {
+     "P": 0.666,
+     "QRS": 0.933,
+     "T": 0.765
+    },
+    "seconds": 82.9
+   },
+   {
+    "label": "no class weights",
+    "weights": "none",
+    "mean": 0.779744707220297,
+    "dice": {
+     "P": 0.658,
+     "QRS": 0.935,
+     "T": 0.746
+    },
+    "seconds": 79.5
+   },
+   {
+    "label": "inverse frequency to the 1.0",
+    "weights": "1.0",
+    "mean": 0.7690511685752343,
+    "dice": {
+     "P": 0.635,
+     "QRS": 0.92,
+     "T": 0.752
+    },
+    "seconds": 82.9
+   }
+  ],
+  "D network and lr": [
+   {
+    "label": "widths [32, 64, 128, 256], lr 0.001",
+    "widths": [
+     32,
+     64,
+     128,
+     256
+    ],
+    "lr": 0.001,
+    "mean": 0.885184904205174,
+    "dice": {
+     "P": 0.842,
+     "QRS": 0.946,
+     "T": 0.868
+    },
+    "seconds": 141.6
+   },
+   {
+    "label": "widths [16, 32, 64, 128], lr 0.001",
+    "widths": [
+     16,
+     32,
+     64,
+     128
+    ],
+    "lr": 0.001,
+    "mean": 0.8739180974426967,
+    "dice": {
+     "P": 0.826,
+     "QRS": 0.938,
+     "T": 0.858
+    },
+    "seconds": 44.5
+   },
+   {
+    "label": "widths [32, 64, 128], lr 0.003",
+    "widths": [
+     32,
+     64,
+     128
+    ],
+    "lr": 0.003,
+    "mean": 0.7890135370432927,
+    "dice": {
+     "P": 0.674,
+     "QRS": 0.93,
+     "T": 0.762
+    },
+    "seconds": 83.2
+   },
+   {
+    "label": "widths [32, 64, 128], lr 0.001",
+    "widths": [
+     32,
+     64,
+     128
+    ],
+    "lr": 0.001,
+    "mean": 0.7879287092428086,
+    "dice": {
+     "P": 0.666,
+     "QRS": 0.933,
+     "T": 0.765
+    },
+    "seconds": 85.1
+   }
+  ],
+  "E epochs and batch": [
+   {
+    "label": "75 epochs, batch 16",
+    "epochs": 75,
+    "batch_size": 16,
+    "mean": 0.8985503704685406,
+    "dice": {
+     "P": 0.868,
+     "QRS": 0.955,
+     "T": 0.873
+    },
+    "balance": {
+     "P": [
+      0.94,
+      0.81
+     ],
+     "QRS": [
+      0.96,
+      0.95
+     ],
+     "T": [
+      0.88,
+      0.87
+     ]
+    }
+   },
+   {
+    "label": "150 epochs, batch 16",
+    "epochs": 150,
+    "batch_size": 16,
+    "mean": 0.8985503704685406,
+    "dice": {
+     "P": 0.868,
+     "QRS": 0.955,
+     "T": 0.873
+    },
+    "balance": {
+     "P": [
+      0.94,
+      0.81
+     ],
+     "QRS": [
+      0.96,
+      0.95
+     ],
+     "T": [
+      0.88,
+      0.87
+     ]
+    }
+   },
+   {
+    "label": "75 epochs, batch 8",
+    "epochs": 75,
+    "batch_size": 8,
+    "mean": 0.8962224956800539,
+    "dice": {
+     "P": 0.864,
+     "QRS": 0.953,
+     "T": 0.872
+    },
+    "balance": {
+     "P": [
+      0.9,
+      0.83
+     ],
+     "QRS": [
+      0.95,
+      0.95
+     ],
+     "T": [
+      0.88,
+      0.86
+     ]
+    }
+   }
+  ],
+  "G at full length": [
+   {
+    "label": "widths [32, 64, 128, 256, 512], 75 epochs",
+    "widths": [
+     32,
+     64,
+     128,
+     256,
+     512
+    ],
+    "epochs": 75,
+    "mean": 0.9348439291299838,
+    "dice": {
+     "P": 0.937,
+     "QRS": 0.955,
+     "T": 0.913
+    },
+    "balance": {
+     "P": [
+      0.96,
+      0.92
+     ],
+     "QRS": [
+      0.95,
+      0.95
+     ],
+     "T": [
+      0.95,
+      0.88
+     ]
+    }
+   },
+   {
+    "label": "widths [32, 64, 128, 256, 512], 150 epochs",
+    "widths": [
+     32,
+     64,
+     128,
+     256,
+     512
+    ],
+    "mean": 0.9348439291299838,
+    "dice": {
+     "P": 0.937,
+     "QRS": 0.955,
+     "T": 0.913
+    },
+    "epochs": 150
+   },
+   {
+    "label": "widths [16, 32, 64, 128, 256], 75 epochs",
+    "widths": [
+     16,
+     32,
+     64,
+     128,
+     256
+    ],
+    "epochs": 75,
+    "mean": 0.9231297895303289,
+    "dice": {
+     "P": 0.92,
+     "QRS": 0.95,
+     "T": 0.899
+    },
+    "balance": {
+     "P": [
+      0.98,
+      0.87
+     ],
+     "QRS": [
+      0.97,
+      0.93
+     ],
+     "T": [
+      0.93,
+      0.87
+     ]
+    }
+   },
+   {
+    "label": "widths [32, 64, 128, 256], 75 epochs",
+    "widths": [
+     32,
+     64,
+     128,
+     256
+    ],
+    "mean": 0.8985503704685406,
+    "dice": {
+     "P": 0.868,
+     "QRS": 0.955,
+     "T": 0.873
+    },
+    "epochs": 75
+   }
+  ],
+  "F depth (at the sweep's 25 epochs)": [
+   {
+    "label": "widths [32, 64, 128, 256, 512]",
+    "widths": [
+     32,
+     64,
+     128,
+     256,
+     512
+    ],
+    "mean": 0.9213006762868682,
+    "dice": {
+     "P": 0.926,
+     "QRS": 0.931,
+     "T": 0.906
+    },
+    "balance": {
+     "P": [
+      0.95,
+      0.9
+     ],
+     "QRS": [
+      0.98,
+      0.89
+     ],
+     "T": [
+      0.91,
+      0.9
+     ]
+    }
+   },
+   {
+    "label": "widths [16, 32, 64, 128, 256]",
+    "widths": [
+     16,
+     32,
+     64,
+     128,
+     256
+    ],
+    "mean": 0.9197735624766089,
+    "dice": {
+     "P": 0.913,
+     "QRS": 0.944,
+     "T": 0.903
+    },
+    "balance": {
+     "P": [
+      0.96,
+      0.87
+     ],
+     "QRS": [
+      0.98,
+      0.91
+     ],
+     "T": [
+      0.94,
+      0.86
+     ]
+    }
+   }
+  ]
+ },
+ "note_widths": "refine() switched widths on stage F, which measures every network at the sweep 25 epochs; the final run trains for epochs, so the switch was reverted to the stage D/E network and the deeper candidates are re-measured at the full length by confirm_depth() (stage G) before it is decided."
+}

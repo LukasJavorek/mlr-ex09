@@ -1,0 +1,105 @@
+TASK 1 SPECIFICATION
+====================================================================================================
+| | your answer |
+| --- | --- |
+| network input (shape) | shape (1, 5000) - lead II of one 10 s record, standardized per record. Under Option B the 5000 samples are the annotated span (median 7.3 s) left-aligned and padded back to 5000, so the shape in this row stays true |
+| network output (shape) | shape (4, 5000) - for every one of the 5000 samples, one logit per class: background, P, QRS, T. `argmax` gives the class of every sample; the dense class map **is** the answer, not a list of wave positions |
+| last layer | 1 x 1 convolution, 4 channels, **no activation** - the softmax is in the loss. This is `UNet`'s own head with `c_out=4`; no pooling, no `Linear` head |
+| training loss | cross-entropy over the 4 classes, skipping the samples nobody annotated: `nn.CrossEntropyLoss(ignore_index=-1)` |
+| evaluation metric | Dice of every wave (P, QRS, T) on the test set, counted over the annotated samples only, next to the baseline's; plus the QRS duration in ms, predicted against annotated |
+| baseline | R peaks with `find_peaks` on the band-passed signal, then P, QRS and T placed at their median distances from the R peak, those distances measured on the **training** patients |
+
+Assumptions behind the table: four classes per sample, as the task states them, so
+4 output channels and cross-entropy. And the samples nobody annotated carry the
+target `-1`: LUDB labels only about 7.3 s of each 10 s record, so the remaining
+26.9% of the samples - 413 real heartbeats, about one in five - are not
+background, they are unknown. Option B deals with them by cropping every record to
+its annotated span, `ignore_index=-1` keeps the cropped-away part and the padding
+out of the loss, and the metric counts only the annotated samples. Without that, a
+perfect model cannot pass about 0.90 on QRS and the 0.89 baseline cannot be beaten.
+
+AS BUILT - every hyperparameter chosen on the validation split
+----------------------------------------------------------------------------------------------------
+  data               Option B crop, margin 128 samples, span statistics
+  class weights      0.5
+  network            UNet(dim=1, c_in=1, c_out=4, widths=[32, 64, 128, 256, 512])
+  loss               CrossEntropyLoss(ignore_index=-1)
+  optimizer          Adam, lr 0.001, batch 16
+  epochs             75 trained, the best validation epoch kept
+  seed               0
+  baseline detector  {"band_hz": [8.0, 20.0], "distance_ms": 200, "keep_rel": 0.35, "anchor": "p90"} 
+
+loaded cache_margin128_span.npz: X (200, 5000), masked 26.9%
+test split: 30 records, one patient each, chosen by the notebook's own permutation(seed 0); this script is the only reader of it
+
+median distance from the R peak, in ms, measured on the training records:
+  class        onset       peak     offset       width
+       P      -202      -146       -92      110
+     QRS       -44         0        48       92
+       T       164       270       346      182
+R peaks on train: 1248/1274 labelled QRS found (98.0%), 1294 peaks found in total   (offsets measured here)
+R peaks on test: 286/288 labelled QRS found (99.3%), 292 peaks found in total
+
+==============================================================================
+TEST SET - Dice of every wave, counted over the annotated samples only
+==============================================================================
+                                                   P             QRS               T
+the task text's baseline *               0.740      -          0.890      -          0.850      -     
+baseline (R peaks + median distances)     0.738 (0.685)     0.881 (0.882)     0.829 (0.828)
+U-Net, this model                        0.903 (0.787)     0.926 (0.928)     0.906 (0.905)
+  global Dice over the annotated samples; in brackets the mean over the records
+  where that wave was scored at all - a method that paints a wave nobody
+  labelled in that record is scored 0 there, not skipped (see metrics.py)
+  * the numbers the task text quotes, from its own label basis: whole 10 s records in which
+    the unannotated edges count as background. The two rows under it are measured on the
+    Option B arrays - same records, same metric, only the annotated samples count. The
+    comparison that means something is the U-Net against the baseline row above it.
+
+global against per-record: P 0.903 / 0.787 (labelled in 26 of 30 records); QRS 0.926 / 0.928 (labelled in 30 of 30 records); T 0.906 / 0.905 (labelled in 30 of 30 records)
+  a record with no labelled wave of some class adds nothing to the pooled global count;
+  in per_record it counts as 0 there only if the method painted that wave anyway.
+
+what the baseline's Dice is made of on the test set:
+                 labelled  predicted      hit   recall  precision      Dice
+  P           12,647     14,844   10,147    0.802     0.684     0.738
+  QRS         14,423     13,580   12,330    0.855     0.908     0.881
+  T           23,818     23,987   19,814    0.832     0.826     0.829
+
+what the model's Dice is made of on the test set:
+                 labelled  predicted      hit   recall  precision      Dice
+  P           12,647     12,891   11,536    0.912     0.895     0.903
+  QRS         14,423     14,168   13,240    0.918     0.935     0.926
+  T           23,818     24,970   22,094    0.928     0.885     0.906
+
+the same two label maps again on the task text's own basis - whole records, every
+unannotated sample counted as background instead of unknown. Same predictions, same
+records, same metric; only the denominator changed. Nothing was chosen on this table:
+                                                   P             QRS               T
+baseline, task text's basis              0.701 (0.650)     0.877 (0.878)     0.798 (0.794)
+U-Net, task text's basis                 0.858 (0.743)     0.919 (0.920)     0.870 (0.868)
+  global Dice over the annotated samples; in brackets the mean over the records
+  where that wave was scored at all - a method that paints a wave nobody
+  labelled in that record is scored 0 there, not skipped (see metrics.py)
+  the task text quotes 0.74 / 0.89 / 0.85 for its baseline, on this basis. Its detector looked for R
+  peaks in the whole 10 s, so it also painted waves in the unannotated edges and was
+  punished for them; ours only sees the cropped span, which makes our row the easier one.
+
+the same Dice per rhythm group (mean over records; the n is small, so this is
+a check that no group is failing, not a result about the rhythms themselves):
+  Sinus rhythm             n=21  model P 0.81 QRS 0.92 T 0.91   baseline P 0.69 QRS 0.88 T 0.82
+  Sinus bradycardia        n=5   model P 0.96 QRS 0.94 T 0.95   baseline P 0.83 QRS 0.88 T 0.85
+  Atrial fibrillation      n=2   model P n/a QRS 0.93 T 0.74   baseline P n/a QRS 0.88 T 0.84
+  Sinus tachycardia        n=2   model P 0.90 QRS 0.96 T 0.94   baseline P 0.92 QRS 0.93 T 0.85
+  (n/a: that rhythm's records carry no annotation for that wave at all - atrial
+   fibrillation has no P wave - so there is no score to report for it)
+
+==============================================================================
+QRS DURATION OF ONE TEST PATIENT - record 121 (Sinus rhythm), 15 annotated QRS complexes
+==============================================================================
+  annotated [ms]     114     116     126     130     112     112     128     122     126     110     108     126     136     116     122   | median 122, mean 120.3
+  predicted [ms]     128     118     120     110     116     118     122     122     132     126     110     124     124     120     122   | median 122, mean 120.8
+  the 15 annotated QRS the model also found: median signed error +2 ms, mean |error| 7 ms, worst -20 ms
+  the network finds the QRS 15/15 times within 60 ms of both edges
+  (figures/example_record.png shows this record: labels above, prediction below)
+
+wrote results/test_scores.json, figures/test_dice.png, figures/example_record.png

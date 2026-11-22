@@ -1,0 +1,21 @@
+loaded cache_margin128_span.npz: X (200, 5000), masked 26.9%
+X (200, 5000) float32, Y (200, 5000) int64, splits train 140, valid 30, test 30
+annotated span: median 3644 samples (7.3 s) of 5000, target -1 on 26.9% of the samples (Option B crops away the unlabelled edges)
+waves repaired by the parser: 14 in records [95, 104, 111]
+fraction of the ANNOTATED samples per class: {'background': np.float64(0.563), 'P': np.float64(0.108), 'QRS': np.float64(0.124), 'T': np.float64(0.205)}
+      P: 1401 waves in 176 of 200 records
+    QRS: 1831 waves in 200 of 200 records
+      T: 1642 waves in 200 of 200 records 
+
+[ok] data: X (200, 5000) float32, Y (200, 5000) int64, targets {-1,0,1,2,3}, margin 128: each record one contiguous block of 2318-4411 annotated samples, starting at sample 128-128 at the latest, standardized to std 1.00 on it, zeros and target -1 behind it
+[ok] shapes: input (4, 1, 5000) -> output (4, 4, 5000) (4 logits per sample, no activation), argmax (4, 5000) with values [0] = ['background']
+     UNet(dim=1, c_in=1, c_out=4, widths=[32, 64, 128]): 0.16 M parameters
+[ok] loss: CrossEntropyLoss(ignore_index=-1) = 1.35220 equals the hand-written mean over the 14594 annotated samples, +1.30e-07
+[ok] class mapping: logits made from the labels give loss 0.0e+00 and Dice [1.0, 1.0, 1.0] for ['P', 'QRS', 'T'] -> channel c is class c, in the loss and in the metric
+[ok] masking: overwrote the prediction at all 5406 unannotated samples of the batch: the real logits still give the same loss 1.35220 to the bit, and a segmentation worth Dice 1.0 is still worth 1.0 - what the network says outside the span cannot win or lose the score
+[ok] learning: 80 batches of 4 records: loss 1.217 -> 0.368 (30% of the start)
+[ok] capacity: 2 records, 300 steps: loss 0.0015, Dice [0.999, 1.0, 1.0] - the network can represent these labels
+[ok] determinism: the same batch twice gives bit-identical outputs in eval mode
+
+smoke test passed.
+timing: 0.35 s per batch of 16 on cpu, so ~3 s per epoch over the 140 training records, ~3 min for 30 epochs including validation.

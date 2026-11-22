@@ -1,0 +1,46 @@
+stage A - the baseline's detector thresholds (no training, judged on the validation split)
+loaded cache_margin0_span.npz: X (200, 5000), masked 26.9%
+    best of 120: {'band_hz': (8.0, 20.0), 'distance_ms': 200, 'keep_rel': 0.35, 'anchor': 'p90'} -> {'P': 0.796, 'QRS': 0.916, 'T': 0.837}, mean 0.850
+C:\dev\9\_analysis\venv\Lib\site-packages\numpy\_core\fromnumeric.py:3862: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+C:\dev\9\_analysis\venv\Lib\site-packages\numpy\_core\_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+    band 5-15 Hz    mean over its 48 settings nan
+    band 8-20 Hz    mean over its 48 settings nan
+loaded cache_margin0_span.npz: X (200, 5000), masked 26.9%
+read 200 records from C:\dev\9\task1_ludb\data\lobachevsky-university-electrocardiography-database-1.0.1
+read 200 records from C:\dev\9\task1_ludb\data\lobachevsky-university-electrocardiography-database-1.0.1
+read 200 records from C:\dev\9\task1_ludb\data\lobachevsky-university-electrocardiography-database-1.0.1
+
+stage B - how the record is cropped and scaled  (25 epochs each, judged on the validation split)
+25 epochs in 82 s; best validation loss 0.3914 in epoch 22
+C:\dev\9\task1_ludb\part1.py:123: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+    margin 0, span statistics      mean 0.770   P 0.611  QRS 0.943  T 0.757   [84 s]
+25 epochs in 81 s; best validation loss 0.3839 in epoch 25
+    margin 0, record statistics    mean 0.780   P 0.642  QRS 0.935  T 0.762   [82 s]
+25 epochs in 79 s; best validation loss 0.3994 in epoch 25
+    margin 128, span statistics    mean 0.780   P 0.658  QRS 0.935  T 0.746   [79 s]
+25 epochs in 79 s; best validation loss 0.3901 in epoch 23
+    margin 250, span statistics    mean 0.777   P 0.642  QRS 0.939  T 0.751   [80 s]
+
+stage C - what the loss weighs  (25 epochs each, judged on the validation split)
+25 epochs in 79 s; best validation loss 0.3994 in epoch 25
+    no class weights               mean 0.780   P 0.658  QRS 0.935  T 0.746   [80 s]
+25 epochs in 83 s; best validation loss 0.4167 in epoch 22
+    inverse frequency to the 0.5   mean 0.788   P 0.666  QRS 0.933  T 0.765   [83 s]
+25 epochs in 83 s; best validation loss 0.4189 in epoch 23
+    inverse frequency to the 1.0   mean 0.769   P 0.635  QRS 0.920  T 0.752   [83 s]
+
+stage D - the network and the learning rate  (25 epochs each, judged on the validation split)
+25 epochs in 85 s; best validation loss 0.4167 in epoch 22
+    widths [32, 64, 128], lr 0.001 mean 0.788   P 0.666  QRS 0.933  T 0.765   [85 s]
+25 epochs in 83 s; best validation loss 0.4086 in epoch 22
+    widths [32, 64, 128], lr 0.003 mean 0.789   P 0.674  QRS 0.930  T 0.762   [83 s]
+25 epochs in 44 s; best validation loss 0.2790 in epoch 24
+    widths [16, 32, 64, 128], lr 0.001 mean 0.874   P 0.826  QRS 0.938  T 0.858   [44 s]
+25 epochs in 141 s; best validation loss 0.2559 in epoch 24
+    widths [32, 64, 128, 256], lr 0.001 mean 0.885   P 0.842  QRS 0.946  T 0.868   [142 s]
+
+chosen for the final run: {"baseline": {"params": {"band_hz": [8.0, 20.0], "distance_ms": 200, "keep_rel": 0.35, "anchor": "p90"}, "dice": {"P": 0.796, "QRS": 0.916, "T": 0.837}, "mean": 0.8495286280397027}, "data": {"margin": 128, "standardize": "span"}, "weights": "0.5", "widths": [32, 64, 128, 256], "lr": 0.001, "batch_size": 16, "epochs": 75, "seed": 0}
+wrote results/choices.json and figures/validation_choices.png

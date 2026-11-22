@@ -1,0 +1,19 @@
+loaded cache_margin128_span.npz: X (200, 5000), masked 26.9%
+
+stage E - how long the training runs  (judged on the validation split)
+75 epochs in 403 s; best validation loss 0.2135 in epoch 47
+    75 epochs, batch 16            mean 0.899   P 0.868  QRS 0.955  T 0.873   [405 s]
+150 epochs in 877 s; best validation loss 0.2135 in epoch 47
+    150 epochs, batch 16           mean 0.899   P 0.868  QRS 0.955  T 0.873   [877 s]
+75 epochs in 391 s; best validation loss 0.2165 in epoch 32
+    75 epochs, batch 8             mean 0.896   P 0.864  QRS 0.953  T 0.872   [392 s]
+
+stage F - deeper still, at the sweep's 25 epochs  (judged on the validation split)
+25 epochs in 77 s; best validation loss 0.2036 in epoch 24
+    widths [16, 32, 64, 128, 256]  mean 0.920   P 0.913  QRS 0.944  T 0.903   [77 s]
+25 epochs in 248 s; best validation loss 0.1751 in epoch 20
+    widths [32, 64, 128, 256, 512] mean 0.921   P 0.926  QRS 0.931  T 0.906   [248 s]
+25 epochs in 144 s; best validation loss 0.2559 in epoch 24
+    the incumbent [32, 64, 128, 256] re-measured: mean 0.885
+
+chosen: widths [32, 64, 128, 256, 512], 75 epochs, batch 16 -> results/choices.json, figures/validation_choices.png
