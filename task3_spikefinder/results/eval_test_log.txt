@@ -1,0 +1,66 @@
+TASK 3 SPECIFICATION
+====================================================================================================
+| | your answer |
+| --- | --- |
+| network input (shape) | shape (1, 512) - one neuron's fluorescence, resampled 100 Hz -> 25 Hz by averaging every 4 samples (86-100% of the power is below 5 Hz and <=0.7% above 25 Hz, so this throws nothing away), standardized per neuron from that neuron's own trace only. 512 samples = 20.5 s, 4x the context per layer 100 Hz would give, which the calcium kernel needs (0.4-2.3 s to fall back to half its peak). Windows are cut at the end of the real part, so none contains NaN padding |
+| network output (shape) | shape (1, 512) - the predicted spike rate for the same window at the same 25 Hz: one rate per 40 ms bin, the metric's own resolution. Fully convolutional, every position predicted and used, nothing cropped |
+| last layer | 1 x 1 convolution to 1 channel, then softplus - UNet's own head with c_out=1, no pooling and no Linear. A rate is non-negative and unbounded above; softplus keeps a gradient where 95.6% of the bins sit, where ReLU would be dead exactly at 0 |
+| training loss | Poisson negative log-likelihood on the 40 ms counts, `rho - r log rho`, with the rate expressed in units of that neuron's own mean rate, averaged within a window and then over the batch. A plain MSE over concatenated windows is a different objective: 10 of the 174 neurons hold 30% of its weight |
+| evaluation metric | the challenge's own, unchanged: sum predicted rate and true counts into 40 ms bins, Pearson correlation per test neuron, mean over the 34 test neurons. Reported next to the per-dataset means, the mean over the ten datasets instead of over neurons, the count of undefined (constant) predictions, and the +-0.005 noise floor of that mean |
+| baseline | both classical guesses, rebuilt on this split rather than quoted, smoothing width tuned on the validation neurons only: the fluorescence itself and its smoothed positive derivative. The task text quotes 0.21 and 0.45 |
+
+Assumptions behind the table: the given split and the 40 ms metric are kept exactly as
+the data cell builds them. Three things the table cannot hold, because the audit found
+them. Dataset 9 contains one neuron twice (columns 3 and 4 are the same recording,
+spikes identical, one copy in train and one in test), so (9,3) is dropped from the
+training set - 1 of 122 neurons, no test neuron changes. The model is selected on the
+validation **correlation**, not on the loss: part1's train() early-stops on the loss,
+and a Poisson loss and a Pearson correlation need not peak in the same epoch. And
+nothing is tuned per dataset - five of the ten datasets have exactly one validation
+neuron, so a per-dataset choice would be fitting one number.
+
+AS BUILT - every hyperparameter chosen on the validation split
+----------------------------------------------------------------------------------------------------
+  data               4-sample mean to 25 Hz, 128 samples = 5.1 s, neuron statistics, duplicate dropped: True
+  target             counts per 40 ms bin, in units of the neuron's own mean rate
+  network            UNet(dim=1, c_in=1, c_out=1, widths=[16, 32, 64, 128]) + softplus
+  loss               poisson_nll(rho - r*log rho), per-window then per-batch mean
+  optimizer          Adam, lr 0.003, batch 64
+  epochs             24 trained, the best validation-correlation epoch kept
+  baseline           smoothed positive derivative, sigma 5 samples (50 ms), tuned on validation
+  seed               0
+  selected on        validation correlation over whole recordings; the test split is read once, by evaluate_task3.py
+
+====================================================================================================
+READING THE TEST SPLIT - the first and only time this pipeline looks at it.
+34 neurons, 2.7 h of recording, 245 thousand 40 ms bins.
+====================================================================================================
+
+the challenge's metric: 40 ms bins, Pearson per neuron, mean over neurons with a bootstrap 95% interval
+network (this model)       mean over 34 neurons 0.595 [+0.544, +0.647]   mean over datasets 0.572   neurons +0.255 .. +0.798   undefined 0
+derivative, sigma 5        mean over 34 neurons 0.467 [+0.416, +0.523]   mean over datasets 0.445   neurons +0.150 .. +0.762   undefined 0
+fluorescence               mean over 34 neurons 0.206 [+0.172, +0.240]   mean over datasets 0.222   neurons +0.001 .. +0.458   undefined 0
+controls on the network    rolled through time -0.001   another neuron's spikes +0.005
+
+network minus derivative baseline: +0.128 (paired bootstrap sd 0.018, +7.2 sd). Both are scored on the same 34 neurons, so the paired sd is much tighter than the two intervals above; and remember a mean over 34 neurons moves ~0.005 on luck alone, so a gap under that is not a result.
+
+per dataset - * marks a dataset where the derivative is not even the better of the two baselines:
+ dataset neurons  network   deriv   fluor worst neuron
+       1       2    0.511   0.459   0.191        0.488
+       2       4    0.420   0.307   0.198        0.255
+       3       3    0.464   0.477   0.215        0.297
+       4       1    0.549   0.259   0.281        0.549 *
+       5       2    0.432   0.332   0.328        0.347
+       6       2    0.668   0.578   0.315        0.660
+       7       7    0.662   0.476   0.183        0.409
+       8       4    0.745   0.554   0.104        0.714
+       9       4    0.562   0.369   0.109        0.457
+      10       5    0.706   0.641   0.297        0.362
+
+the task asks to beat the derivative on average **and in most of the ten datasets**: it does in 9 of 10 (not in [3], where the network is worse by 0.013 - read that against the +-0.03 worth one neuron, and the per-dataset means in these datasets rest on as few as one neuron)
+
+the duplicated neuron: test neuron (9,4) scores 0.642; its training twin (9,3) was dropped, so nothing here has seen it. Mean over the other 33 test neurons 0.594, over all 34 0.595.
+
+wrote results\test_scores.json
+wrote figures\test_scores.png
+wrote figures\example_neuron.png

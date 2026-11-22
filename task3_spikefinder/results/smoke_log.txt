@@ -1,0 +1,20 @@
+data: loaded cache_d4_neuron.npz
+174 neurons on a 25 Hz grid (4 released samples per bin): 51510 s = 14.3 h of recording
+input (channels, window) = (1, 128) = 5.1 s, standardized per neuron: True
+splits train 121 neurons / 6993 windows, valid 18 neurons / 1011 windows, test 34 neurons / 1891 windows   [(9,3), the duplicate's training copy, dropped]
+empty bins (40 ms each): 95.6%; the target is a spike count, 0-6 per 40 ms
+shortest neuron 55 s, longest 720 s, tail dropped per neuron < 5.1 s
+target scale (neuron mean count per bin): 0.0010 .. 0.4960 over the 139 train+valid neurons, a factor of 265 between the quietest and loudest neuron that is not at the floor  [1 neuron sits at the 0.001 floor, counted in the range but not in that factor]
+
+[ok] data: 174 neurons; x standardized per neuron (worst |mean| 1.6e-07, worst |std-1| 3.5e-06); y integer counts per 40 ms bin, 0-15 observed (24 is the ceiling: 6 spikes in 4 samples), 95.6% empty, mean 0.062 per bin; target scales exist for the 139 train+valid neurons and for no test neuron
+[ok] no padding: every one of the 9957 windows of 128 samples ends at or before its neuron's last real sample, checked against 174 raw columns re-read from the csv; 533 s of the 51513 s recorded - the ragged tail under one window per neuron - is all the signal no window sees, and no window is padded to reach 128
+[ok] split: the notebook's rng(0) split rebuilt to the neuron: 122/18/34 with per-dataset n_test = max(1, round(0.2n)); dataset 9 really did hold the leak - (9,3) trained on while its duplicate (9,4) sits in test - and with (9,3) dropped the 121 training neurons share no recording with any of the 34 test neurons
+[ok] shapes: input (4, 1, 128) -> output (4, 1, 128): one non-negative rate per 40 ms bin, nothing cropped; a whole recording of 17996 samples (not a multiple of 8) comes out 17996 samples too, so a test neuron is one forward pass and no stitching of overlapping windows
+[ok] loss: poisson_nll(rho, r) = 1.50493 equals the textbook mean(lambda - y log lambda) of the real counts divided by that neuron's mu plus mean(r) log mu (+1.0e-06): one likelihood, renormalized per neuron, so the 12 spikes/s neurons cannot outweigh the 0.02 spikes/s ones
+[ok] metric: a perfect prediction scores 1.0 and so does every positive affine map of it (x2, x2 as float32, x1e-6, /mu (0.056), -mean, +1e6), the worst deviating from 1.0 by 0.0e+00 - the scale the network does not know is a scale the metric cannot see; a constant prediction is undefined (None), not 0, so a flat line is caught rather than averaged away; and untrained predictions rolled through time score -0.004 (against another neuron: +0.001, above zero only because same-session neurons share signal) - the score measures alignment
+[ok] capacity: 32 windows, 120 batches: loss 0.564 -> -2.682 and the correlation on those same windows 0.994, measured over the 30 that carry a spike - the 2 that are not scorable are windows whose target is empty throughout, where the metric is undefined by its own rule (check 6) rather than zero, as it is for 27% of all the training windows at this window length - the network can represent this mapping, so a low score later would be the data or the settings, not the architecture
+[ok] determinism: the same batch twice gives bit-identical outputs in eval mode
+[ok] head: with the head driven to logits down to -225 the output stays in [0.00e+00, 527.30] and finite: softplus is non-negative everywhere and still has a gradient at 0, where 96% of the bins sit
+
+smoke test passed.
+timing: 14 ms per batch of 32 on cpu with 6 torch threads (warm), so ~3.0 s per epoch over the 6993 training windows (219 steps) at widths=[16, 32, 64]; the sweeps and the final run use more levels and set 6 threads, and their real seconds are in results/choices.json and results/train_log.json.

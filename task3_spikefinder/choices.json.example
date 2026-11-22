@@ -1,0 +1,36 @@
+{
+  "_comment": [
+    "Copy this to results/choices.json to train the specification as written, without",
+    "running the ~1 h of validation sweeps that produce the real file (or just run",
+    "`python run_all.py --skip-choices` once it exists). These are the settings the",
+    "specification table in the notebook names and the data audit argues for - the",
+    "grid, the window, the standardization and the target scale are measurements, not",
+    "guesses, so this file trains the intended model. What it does NOT contain is what",
+    "only a sweep can know: the learning rate, the depth, the batch size and the epoch",
+    "count were set by arm-by-arm measurement on the validation split, and the values",
+    "below are the stage-1 defaults those arms started from, not their winners. The",
+    "measured ones live in results/choices.json, which is what every script reads.",
+    "",
+    "'chosen.data' is a sf_data.Config; 'widths' is the level widths passed to",
+    "part1.UNet, so len(widths) is the depth; epochs/lr/batch_size are the training",
+    "loop's; baseline_sigma is the smoothed-derivative baseline's tuning, in released",
+    "(100 Hz) samples, chosen on the validation split by `python baseline.py`."
+  ],
+  "sweeps": {},
+  "chosen": {
+    "data": {
+      "decimate": 4,
+      "window": 512,
+      "standardize": "neuron",
+      "scale": "neuron",
+      "drop_duplicate": true,
+      "seed": 0
+    },
+    "widths": [16, 32, 64],
+    "lr": 0.003,
+    "batch_size": 32,
+    "epochs": 40,
+    "baseline_sigma": 5,
+    "seed": 0
+  }
+}

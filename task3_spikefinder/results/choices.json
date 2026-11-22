@@ -1,0 +1,1611 @@
+{
+  "sweeps": {
+    "data": [
+      {
+        "name": "decimate 1 (100 Hz, window 2050)",
+        "data": {
+          "decimate": 1,
+          "window": 2050,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6092,
+        "corr_spread": 0.005,
+        "corr_per_seed": [
+          0.6072,
+          0.616,
+          0.6044
+        ],
+        "corr_datasets": 0.5546,
+        "seconds": 300.6,
+        "windows_train": 1695,
+        "n_parameters": 41521,
+        "curve": [
+          0.5352,
+          0.541,
+          0.5635,
+          0.5711,
+          0.5793,
+          0.5851,
+          0.5809,
+          0.5964,
+          0.5811,
+          0.5982,
+          0.5983,
+          0.6063,
+          0.6027,
+          0.6019,
+          0.5974,
+          0.5641
+        ]
+      },
+      {
+        "name": "decimate 2 (50 Hz, window 1025)",
+        "data": {
+          "decimate": 2,
+          "window": 1025,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6195,
+        "corr_spread": 0.0043,
+        "corr_per_seed": [
+          0.6138,
+          0.6201,
+          0.6244
+        ],
+        "corr_datasets": 0.5675,
+        "seconds": 136.1,
+        "windows_train": 1695,
+        "n_parameters": 41521,
+        "curve": [
+          0.544,
+          0.5709,
+          0.5857,
+          0.5856,
+          0.5998,
+          0.5915,
+          0.5851,
+          0.6109,
+          0.6018,
+          0.6087,
+          0.6122,
+          0.6119,
+          0.6134,
+          0.6142,
+          0.6016,
+          0.599
+        ]
+      },
+      {
+        "name": "decimate 4 (25 Hz, window 512)",
+        "data": {
+          "decimate": 4,
+          "window": 512,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6176,
+        "corr_spread": 0.005,
+        "corr_per_seed": [
+          0.6116,
+          0.6239,
+          0.6174
+        ],
+        "corr_datasets": 0.5733,
+        "seconds": 80.1,
+        "windows_train": 1695,
+        "n_parameters": 41521,
+        "curve": [
+          0.5408,
+          0.5632,
+          0.5764,
+          0.5811,
+          0.5984,
+          0.5975,
+          0.5929,
+          0.6027,
+          0.6072,
+          0.6129,
+          0.603,
+          0.6092,
+          0.6111,
+          0.6061,
+          0.5988,
+          0.5977
+        ]
+      },
+      {
+        "name": "window 128 samples (5 s)",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6279,
+        "corr_spread": 0.0014,
+        "corr_per_seed": [
+          0.6289,
+          0.6259,
+          0.6288
+        ],
+        "corr_datasets": 0.5826,
+        "seconds": 181.5,
+        "windows_train": 6993,
+        "n_parameters": 41521,
+        "curve": [
+          0.5639,
+          0.5744,
+          0.5941,
+          0.5989,
+          0.6079,
+          0.613,
+          0.6195,
+          0.6129,
+          0.6105,
+          0.614,
+          0.617,
+          0.6154,
+          0.6126,
+          0.6142,
+          0.6144,
+          0.6149
+        ]
+      },
+      {
+        "name": "window 256 samples (10 s)",
+        "data": {
+          "decimate": 4,
+          "window": 256,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6236,
+        "corr_spread": 0.0024,
+        "corr_per_seed": [
+          0.6202,
+          0.6255,
+          0.6251
+        ],
+        "corr_datasets": 0.5766,
+        "seconds": 116.7,
+        "windows_train": 3481,
+        "n_parameters": 41521,
+        "curve": [
+          0.5612,
+          0.5781,
+          0.5753,
+          0.5983,
+          0.6054,
+          0.6022,
+          0.6076,
+          0.6121,
+          0.6185,
+          0.6191,
+          0.6183,
+          0.6114,
+          0.6124,
+          0.6162,
+          0.6116,
+          0.6119
+        ]
+      },
+      {
+        "name": "window 1024 samples (41 s)",
+        "data": {
+          "decimate": 4,
+          "window": 1024,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6123,
+        "corr_spread": 0.0029,
+        "corr_per_seed": [
+          0.6085,
+          0.613,
+          0.6155
+        ],
+        "corr_datasets": 0.5682,
+        "seconds": 67.3,
+        "windows_train": 795,
+        "n_parameters": 41521,
+        "curve": [
+          0.4851,
+          0.5415,
+          0.5504,
+          0.5613,
+          0.573,
+          0.5852,
+          0.5808,
+          0.589,
+          0.593,
+          0.5987,
+          0.5939,
+          0.6054,
+          0.5939,
+          0.6049,
+          0.6044,
+          0.6005
+        ]
+      },
+      {
+        "name": "standardize none",
+        "data": {
+          "decimate": 4,
+          "window": 512,
+          "standardize": "none",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6199,
+        "corr_spread": 0.0022,
+        "corr_per_seed": [
+          0.6183,
+          0.623,
+          0.6183
+        ],
+        "corr_datasets": 0.574,
+        "seconds": 78.8,
+        "windows_train": 1695,
+        "n_parameters": 41521,
+        "curve": [
+          0.5469,
+          0.5498,
+          0.5661,
+          0.5802,
+          0.5956,
+          0.5924,
+          0.5887,
+          0.5972,
+          0.6045,
+          0.6071,
+          0.605,
+          0.6091,
+          0.6133,
+          0.6141,
+          0.6137,
+          0.61
+        ]
+      },
+      {
+        "name": "target scale global",
+        "data": {
+          "decimate": 4,
+          "window": 512,
+          "standardize": "neuron",
+          "scale": "global",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.5787,
+        "corr_spread": 0.007,
+        "corr_per_seed": [
+          0.5881,
+          0.5766,
+          0.5713
+        ],
+        "corr_datasets": 0.5495,
+        "seconds": 77.9,
+        "windows_train": 1695,
+        "n_parameters": 41521,
+        "curve": [
+          0.4903,
+          0.4992,
+          0.5296,
+          0.5,
+          0.5591,
+          0.5547,
+          0.54,
+          0.5581,
+          0.5555,
+          0.5693,
+          0.5677,
+          0.5691,
+          0.5697,
+          0.5636,
+          0.5787,
+          0.5574
+        ]
+      }
+    ],
+    "lr": [
+      {
+        "name": "lr 0.001",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.001,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6203,
+        "corr_spread": 0.0059,
+        "corr_per_seed": [
+          0.6203,
+          0.6275,
+          0.6131
+        ],
+        "corr_datasets": 0.5763,
+        "seconds": 174.3,
+        "windows_train": 6993,
+        "n_parameters": 41521,
+        "curve": [
+          0.5474,
+          0.5705,
+          0.5897,
+          0.6035,
+          0.6038,
+          0.6143,
+          0.6129,
+          0.6124,
+          0.6087,
+          0.6104,
+          0.6155,
+          0.6089,
+          0.6097,
+          0.6071,
+          0.6083,
+          0.6052
+        ]
+      },
+      {
+        "name": "lr 0.003",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6279,
+        "corr_spread": 0.0014,
+        "corr_per_seed": [
+          0.6289,
+          0.6259,
+          0.6288
+        ],
+        "corr_datasets": 0.5826,
+        "seconds": 172.0,
+        "windows_train": 6993,
+        "n_parameters": 41521,
+        "curve": [
+          0.5639,
+          0.5744,
+          0.5941,
+          0.5989,
+          0.6079,
+          0.613,
+          0.6195,
+          0.6129,
+          0.6105,
+          0.614,
+          0.617,
+          0.6154,
+          0.6126,
+          0.6142,
+          0.6144,
+          0.6149
+        ]
+      },
+      {
+        "name": "lr 0.01",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.01,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6211,
+        "corr_spread": 0.0013,
+        "corr_per_seed": [
+          0.6207,
+          0.623,
+          0.6198
+        ],
+        "corr_datasets": 0.5745,
+        "seconds": 171.9,
+        "windows_train": 6993,
+        "n_parameters": 41521,
+        "curve": [
+          0.5627,
+          0.5637,
+          0.5858,
+          0.603,
+          0.6048,
+          0.6076,
+          0.6077,
+          0.6073,
+          0.6081,
+          0.607,
+          0.615,
+          0.6121,
+          0.6138,
+          0.6118,
+          0.6156,
+          0.6124
+        ]
+      }
+    ],
+    "depth": [
+      {
+        "name": "3 levels [16, 32, 64]",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6279,
+        "corr_spread": 0.0014,
+        "corr_per_seed": [
+          0.6289,
+          0.6259,
+          0.6288
+        ],
+        "corr_datasets": 0.5826,
+        "seconds": 172.6,
+        "windows_train": 6993,
+        "n_parameters": 41521,
+        "curve": [
+          0.5639,
+          0.5744,
+          0.5941,
+          0.5989,
+          0.6079,
+          0.613,
+          0.6195,
+          0.6129,
+          0.6105,
+          0.614,
+          0.617,
+          0.6154,
+          0.6126,
+          0.6142,
+          0.6144,
+          0.6149
+        ]
+      },
+      {
+        "name": "4 levels [16, 32, 64, 128]",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.63,
+        "corr_spread": 0.0028,
+        "corr_per_seed": [
+          0.6284,
+          0.6339,
+          0.6278
+        ],
+        "corr_datasets": 0.5851,
+        "seconds": 262.3,
+        "windows_train": 6993,
+        "n_parameters": 169713,
+        "curve": [
+          0.5594,
+          0.5932,
+          0.6032,
+          0.6059,
+          0.6015,
+          0.615,
+          0.6144,
+          0.6189,
+          0.6152,
+          0.6169,
+          0.6155,
+          0.61,
+          0.6228,
+          0.6217,
+          0.6241,
+          0.6197
+        ]
+      },
+      {
+        "name": "5 levels [16, 32, 64, 128, 256]",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128,
+          256
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6342,
+        "corr_spread": 0.0041,
+        "corr_per_seed": [
+          0.6313,
+          0.6312,
+          0.64
+        ],
+        "corr_datasets": 0.5884,
+        "seconds": 419.2,
+        "windows_train": 6993,
+        "n_parameters": 680049,
+        "curve": [
+          0.5768,
+          0.5921,
+          0.6116,
+          0.6094,
+          0.6089,
+          0.6173,
+          0.6196,
+          0.6205,
+          0.6118,
+          0.6198,
+          0.6262,
+          0.6273,
+          0.6208,
+          0.6108,
+          0.6143,
+          0.6251
+        ]
+      }
+    ],
+    "batch": [
+      {
+        "name": "batch 16",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 16,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6289,
+        "corr_spread": 0.0022,
+        "corr_per_seed": [
+          0.6312,
+          0.626,
+          0.6296
+        ],
+        "corr_datasets": 0.5826,
+        "seconds": 449.5,
+        "windows_train": 6993,
+        "n_parameters": 169713,
+        "curve": [
+          0.5433,
+          0.5882,
+          0.5875,
+          0.599,
+          0.6032,
+          0.6066,
+          0.6103,
+          0.6165,
+          0.6163,
+          0.6207,
+          0.6162,
+          0.6147,
+          0.6183,
+          0.6169,
+          0.6158,
+          0.6222
+        ]
+      },
+      {
+        "name": "batch 32",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.63,
+        "corr_spread": 0.0028,
+        "corr_per_seed": [
+          0.6284,
+          0.6339,
+          0.6278
+        ],
+        "corr_datasets": 0.5851,
+        "seconds": 276.3,
+        "windows_train": 6993,
+        "n_parameters": 169713,
+        "curve": [
+          0.5594,
+          0.5932,
+          0.6032,
+          0.6059,
+          0.6015,
+          0.615,
+          0.6144,
+          0.6189,
+          0.6152,
+          0.6169,
+          0.6155,
+          0.61,
+          0.6228,
+          0.6217,
+          0.6241,
+          0.6197
+        ]
+      },
+      {
+        "name": "batch 64",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 16,
+        "lr": 0.003,
+        "batch_size": 64,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6322,
+        "corr_spread": 0.0035,
+        "corr_per_seed": [
+          0.6349,
+          0.6343,
+          0.6273
+        ],
+        "corr_datasets": 0.5843,
+        "seconds": 191.3,
+        "windows_train": 6993,
+        "n_parameters": 169713,
+        "curve": [
+          0.5578,
+          0.5847,
+          0.5917,
+          0.6026,
+          0.6072,
+          0.612,
+          0.6174,
+          0.619,
+          0.6177,
+          0.6169,
+          0.6243,
+          0.6203,
+          0.6175,
+          0.6189,
+          0.6128,
+          0.6055
+        ]
+      }
+    ],
+    "epochs": [
+      {
+        "name": "long curve, 4 levels",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 90,
+        "lr": 0.003,
+        "batch_size": 64,
+        "seeds": [
+          0
+        ],
+        "corr": 0.6349,
+        "corr_spread": 0.0,
+        "corr_per_seed": [
+          0.6349
+        ],
+        "corr_datasets": 0.5906,
+        "seconds": 356.7,
+        "windows_train": 6993,
+        "n_parameters": 169713,
+        "curve": [
+          0.5555,
+          0.5905,
+          0.5791,
+          0.6042,
+          0.6131,
+          0.6041,
+          0.6107,
+          0.6138,
+          0.6128,
+          0.6136,
+          0.6349,
+          0.618,
+          0.6329,
+          0.6187,
+          0.6173,
+          0.5942,
+          0.6218,
+          0.6136,
+          0.5923,
+          0.5922,
+          0.6049,
+          0.576,
+          0.5945,
+          0.6133,
+          0.5805,
+          0.6002,
+          0.5925,
+          0.5658,
+          0.5687,
+          0.5709,
+          0.5793,
+          0.5624,
+          0.5696,
+          0.5788,
+          0.5747,
+          0.5738,
+          0.5587,
+          0.5823,
+          0.5643,
+          0.5963,
+          0.5762,
+          0.5574,
+          0.5708,
+          0.5427,
+          0.5283,
+          0.578,
+          0.5304,
+          0.5485,
+          0.5463,
+          0.5495,
+          0.5294,
+          0.5383,
+          0.5406,
+          0.5469,
+          0.5452,
+          0.5538,
+          0.5413,
+          0.5457,
+          0.531,
+          0.5333,
+          0.5287,
+          0.5388,
+          0.5447,
+          0.5471,
+          0.5294,
+          0.5394,
+          0.4849,
+          0.5351,
+          0.5261,
+          0.5442,
+          0.5387,
+          0.5206,
+          0.5202,
+          0.5119,
+          0.4986,
+          0.5453,
+          0.5179,
+          0.5284,
+          0.5232,
+          0.5186,
+          0.5168,
+          0.5189,
+          0.5213,
+          0.5046,
+          0.5216,
+          0.5389,
+          0.5089,
+          0.5032,
+          0.519,
+          0.5179
+        ]
+      }
+    ],
+    "confirm": [
+      {
+        "name": "chosen",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 24,
+        "lr": 0.003,
+        "batch_size": 64,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6322,
+        "corr_spread": 0.0035,
+        "corr_per_seed": [
+          0.6349,
+          0.6343,
+          0.6273
+        ],
+        "corr_datasets": 0.5843,
+        "seconds": 267.2,
+        "windows_train": 6993,
+        "n_parameters": 169713,
+        "curve": [
+          0.5578,
+          0.5847,
+          0.5917,
+          0.6026,
+          0.6072,
+          0.612,
+          0.6174,
+          0.619,
+          0.6177,
+          0.6169,
+          0.6243,
+          0.6203,
+          0.6175,
+          0.6189,
+          0.6128,
+          0.6055,
+          0.6127,
+          0.6057,
+          0.6102,
+          0.5999,
+          0.6019,
+          0.5835,
+          0.5879,
+          0.6136
+        ]
+      },
+      {
+        "name": "runner-up: 5 levels [16, 32, 64, 128, 256]",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128,
+          256
+        ],
+        "epochs": 24,
+        "lr": 0.003,
+        "batch_size": 32,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6342,
+        "corr_spread": 0.0041,
+        "corr_per_seed": [
+          0.6313,
+          0.6312,
+          0.64
+        ],
+        "corr_datasets": 0.5884,
+        "seconds": 602.4,
+        "windows_train": 6993,
+        "n_parameters": 680049,
+        "curve": [
+          0.5768,
+          0.5921,
+          0.6116,
+          0.6094,
+          0.6089,
+          0.6173,
+          0.6196,
+          0.6205,
+          0.6118,
+          0.6198,
+          0.6262,
+          0.6273,
+          0.6208,
+          0.6108,
+          0.6143,
+          0.6251,
+          0.6265,
+          0.6204,
+          0.6126,
+          0.6196,
+          0.599,
+          0.6111,
+          0.6107,
+          0.6079
+        ]
+      },
+      {
+        "name": "duplicate (9,3) back in train",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": false,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 24,
+        "lr": 0.003,
+        "batch_size": 64,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6263,
+        "corr_spread": 0.0019,
+        "corr_per_seed": [
+          0.6289,
+          0.6252,
+          0.6247
+        ],
+        "corr_datasets": 0.581,
+        "seconds": 274.8,
+        "windows_train": 7055,
+        "n_parameters": 169713,
+        "curve": [
+          0.5584,
+          0.5871,
+          0.5925,
+          0.5929,
+          0.6043,
+          0.6106,
+          0.6209,
+          0.6135,
+          0.6208,
+          0.6065,
+          0.6189,
+          0.6182,
+          0.6154,
+          0.6098,
+          0.6182,
+          0.6117,
+          0.6176,
+          0.6097,
+          0.6061,
+          0.6107,
+          0.6018,
+          0.6019,
+          0.5946,
+          0.5973
+        ]
+      },
+      {
+        "name": "window 128, batch 256",
+        "data": {
+          "decimate": 4,
+          "window": 128,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 24,
+        "lr": 0.003,
+        "batch_size": 256,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6149,
+        "corr_spread": 0.0047,
+        "corr_per_seed": [
+          0.6092,
+          0.6147,
+          0.6208
+        ],
+        "corr_datasets": 0.5692,
+        "seconds": 192.0,
+        "windows_train": 6993,
+        "n_parameters": 169713,
+        "curve": [
+          0.5219,
+          0.5591,
+          0.5688,
+          0.5775,
+          0.5935,
+          0.601,
+          0.602,
+          0.6134,
+          0.606,
+          0.6004,
+          0.6114,
+          0.61,
+          0.6059,
+          0.5934,
+          0.6047,
+          0.5936,
+          0.5913,
+          0.5923,
+          0.5901,
+          0.5869,
+          0.5777,
+          0.5756,
+          0.566,
+          0.5792
+        ]
+      },
+      {
+        "name": "window 512, batch as chosen",
+        "data": {
+          "decimate": 4,
+          "window": 512,
+          "standardize": "neuron",
+          "scale": "neuron",
+          "drop_duplicate": true,
+          "seed": 0
+        },
+        "widths": [
+          16,
+          32,
+          64,
+          128
+        ],
+        "epochs": 24,
+        "lr": 0.003,
+        "batch_size": 64,
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "corr": 0.6169,
+        "corr_spread": 0.0043,
+        "corr_per_seed": [
+          0.6169,
+          0.6221,
+          0.6116
+        ],
+        "corr_datasets": 0.5695,
+        "seconds": 169.2,
+        "windows_train": 1695,
+        "n_parameters": 169713,
+        "curve": [
+          0.5109,
+          0.5531,
+          0.564,
+          0.5842,
+          0.5916,
+          0.5866,
+          0.5961,
+          0.6028,
+          0.5973,
+          0.6032,
+          0.6094,
+          0.5972,
+          0.6069,
+          0.6011,
+          0.6042,
+          0.6121,
+          0.6037,
+          0.6048,
+          0.5964,
+          0.5897,
+          0.5926,
+          0.5848,
+          0.5822,
+          0.5756
+        ]
+      }
+    ]
+  },
+  "curves": [
+    {
+      "name": "long curve, 4 levels",
+      "data": {
+        "decimate": 4,
+        "window": 128,
+        "standardize": "neuron",
+        "scale": "neuron",
+        "drop_duplicate": true,
+        "seed": 0
+      },
+      "widths": [
+        16,
+        32,
+        64,
+        128
+      ],
+      "epochs": 90,
+      "lr": 0.003,
+      "batch_size": 64,
+      "seeds": [
+        0
+      ],
+      "corr": 0.6349,
+      "corr_spread": 0.0,
+      "corr_per_seed": [
+        0.6349
+      ],
+      "corr_datasets": 0.5906,
+      "seconds": 356.7,
+      "windows_train": 6993,
+      "n_parameters": 169713,
+      "curve": [
+        0.5555,
+        0.5905,
+        0.5791,
+        0.6042,
+        0.6131,
+        0.6041,
+        0.6107,
+        0.6138,
+        0.6128,
+        0.6136,
+        0.6349,
+        0.618,
+        0.6329,
+        0.6187,
+        0.6173,
+        0.5942,
+        0.6218,
+        0.6136,
+        0.5923,
+        0.5922,
+        0.6049,
+        0.576,
+        0.5945,
+        0.6133,
+        0.5805,
+        0.6002,
+        0.5925,
+        0.5658,
+        0.5687,
+        0.5709,
+        0.5793,
+        0.5624,
+        0.5696,
+        0.5788,
+        0.5747,
+        0.5738,
+        0.5587,
+        0.5823,
+        0.5643,
+        0.5963,
+        0.5762,
+        0.5574,
+        0.5708,
+        0.5427,
+        0.5283,
+        0.578,
+        0.5304,
+        0.5485,
+        0.5463,
+        0.5495,
+        0.5294,
+        0.5383,
+        0.5406,
+        0.5469,
+        0.5452,
+        0.5538,
+        0.5413,
+        0.5457,
+        0.531,
+        0.5333,
+        0.5287,
+        0.5388,
+        0.5447,
+        0.5471,
+        0.5294,
+        0.5394,
+        0.4849,
+        0.5351,
+        0.5261,
+        0.5442,
+        0.5387,
+        0.5206,
+        0.5202,
+        0.5119,
+        0.4986,
+        0.5453,
+        0.5179,
+        0.5284,
+        0.5232,
+        0.5186,
+        0.5168,
+        0.5189,
+        0.5213,
+        0.5046,
+        0.5216,
+        0.5389,
+        0.5089,
+        0.5032,
+        0.519,
+        0.5179
+      ]
+    },
+    {
+      "name": "decimate 1 (100 Hz, window 2050)",
+      "data": {
+        "decimate": 1,
+        "window": 2050,
+        "standardize": "neuron",
+        "scale": "neuron",
+        "drop_duplicate": true,
+        "seed": 0
+      },
+      "widths": [
+        16,
+        32,
+        64
+      ],
+      "epochs": 16,
+      "lr": 0.003,
+      "batch_size": 32,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "corr": 0.6092,
+      "corr_spread": 0.005,
+      "corr_per_seed": [
+        0.6072,
+        0.616,
+        0.6044
+      ],
+      "corr_datasets": 0.5546,
+      "seconds": 300.6,
+      "windows_train": 1695,
+      "n_parameters": 41521,
+      "curve": [
+        0.5352,
+        0.541,
+        0.5635,
+        0.5711,
+        0.5793,
+        0.5851,
+        0.5809,
+        0.5964,
+        0.5811,
+        0.5982,
+        0.5983,
+        0.6063,
+        0.6027,
+        0.6019,
+        0.5974,
+        0.5641
+      ]
+    },
+    {
+      "name": "decimate 4 (25 Hz, window 512)",
+      "data": {
+        "decimate": 4,
+        "window": 512,
+        "standardize": "neuron",
+        "scale": "neuron",
+        "drop_duplicate": true,
+        "seed": 0
+      },
+      "widths": [
+        16,
+        32,
+        64
+      ],
+      "epochs": 16,
+      "lr": 0.003,
+      "batch_size": 32,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "corr": 0.6176,
+      "corr_spread": 0.005,
+      "corr_per_seed": [
+        0.6116,
+        0.6239,
+        0.6174
+      ],
+      "corr_datasets": 0.5733,
+      "seconds": 80.1,
+      "windows_train": 1695,
+      "n_parameters": 41521,
+      "curve": [
+        0.5408,
+        0.5632,
+        0.5764,
+        0.5811,
+        0.5984,
+        0.5975,
+        0.5929,
+        0.6027,
+        0.6072,
+        0.6129,
+        0.603,
+        0.6092,
+        0.6111,
+        0.6061,
+        0.5988,
+        0.5977
+      ]
+    }
+  ],
+  "chosen": {
+    "data": {
+      "decimate": 4,
+      "window": 128,
+      "standardize": "neuron",
+      "scale": "neuron",
+      "drop_duplicate": true,
+      "seed": 0
+    },
+    "widths": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "lr": 0.003,
+    "batch_size": 64,
+    "epochs": 24,
+    "baseline_sigma": 5,
+    "seed": 0
+  }
+}

@@ -1,0 +1,283 @@
+{
+  "split": "test",
+  "config": {
+    "decimate": 4,
+    "window": 128,
+    "standardize": "neuron",
+    "scale": "neuron",
+    "drop_duplicate": true,
+    "seed": 0
+  },
+  "chosen": {
+    "data": {
+      "decimate": 4,
+      "window": 128,
+      "standardize": "neuron",
+      "scale": "neuron",
+      "drop_duplicate": true,
+      "seed": 0
+    },
+    "widths": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "lr": 0.003,
+    "batch_size": 64,
+    "epochs": 24,
+    "baseline_sigma": 5,
+    "seed": 0
+  },
+  "bins_ms": 40,
+  "n_neurons": 34,
+  "hours_of_signal": 2.72,
+  "scores": {
+    "network (this model)": {
+      "bins_ms": 40,
+      "mean_over_neurons": 0.595108874474599,
+      "mean_over_datasets": 0.5718704088331359,
+      "n_scored": 34,
+      "n_undefined": 0,
+      "median_neuron": 0.6478103354053867,
+      "min_neuron": 0.25469175625737617,
+      "max_neuron": 0.7975836547891784,
+      "per_dataset": {
+        "1": 0.5106,
+        "2": 0.4196,
+        "3": 0.4643,
+        "4": 0.5491,
+        "5": 0.4321,
+        "6": 0.6684,
+        "7": 0.6623,
+        "8": 0.7448,
+        "9": 0.5616,
+        "10": 0.7059
+      },
+      "n_per_dataset": {
+        "1": 2,
+        "2": 4,
+        "3": 3,
+        "4": 1,
+        "5": 2,
+        "6": 2,
+        "7": 7,
+        "8": 4,
+        "9": 4,
+        "10": 5
+      },
+      "boot95_over_neurons": [
+        0.5441,
+        0.6471
+      ]
+    },
+    "derivative, sigma 5": {
+      "bins_ms": 40,
+      "mean_over_neurons": 0.46713436165804756,
+      "mean_over_datasets": 0.44514632083966743,
+      "n_scored": 34,
+      "n_undefined": 0,
+      "median_neuron": 0.49530349210140245,
+      "min_neuron": 0.1495326755485113,
+      "max_neuron": 0.7619663320383564,
+      "per_dataset": {
+        "1": 0.4587,
+        "2": 0.3069,
+        "3": 0.4771,
+        "4": 0.2594,
+        "5": 0.3317,
+        "6": 0.5778,
+        "7": 0.4758,
+        "8": 0.5539,
+        "9": 0.3693,
+        "10": 0.6409
+      },
+      "n_per_dataset": {
+        "1": 2,
+        "2": 4,
+        "3": 3,
+        "4": 1,
+        "5": 2,
+        "6": 2,
+        "7": 7,
+        "8": 4,
+        "9": 4,
+        "10": 5
+      },
+      "boot95_over_neurons": [
+        0.4158,
+        0.5228
+      ]
+    },
+    "fluorescence": {
+      "bins_ms": 40,
+      "mean_over_neurons": 0.20590685298346992,
+      "mean_over_datasets": 0.22197895041937424,
+      "n_scored": 34,
+      "n_undefined": 0,
+      "median_neuron": 0.1986938683069009,
+      "min_neuron": 0.0011444075413433233,
+      "max_neuron": 0.45780823556060135,
+      "per_dataset": {
+        "1": 0.1907,
+        "2": 0.1975,
+        "3": 0.2147,
+        "4": 0.281,
+        "5": 0.3281,
+        "6": 0.3147,
+        "7": 0.183,
+        "8": 0.1039,
+        "9": 0.109,
+        "10": 0.2971
+      },
+      "n_per_dataset": {
+        "1": 2,
+        "2": 4,
+        "3": 3,
+        "4": 1,
+        "5": 2,
+        "6": 2,
+        "7": 7,
+        "8": 4,
+        "9": 4,
+        "10": 5
+      },
+      "boot95_over_neurons": [
+        0.172,
+        0.2399
+      ]
+    }
+  },
+  "controls": {
+    "shifted": -0.0014,
+    "shuffled": 0.0052
+  },
+  "per_dataset": {
+    "1": {
+      "n": 2,
+      "network (this model)": 0.5106,
+      "derivative, sigma 5": 0.4587,
+      "fluorescence": 0.1907,
+      "worst_neuron": 0.4882
+    },
+    "2": {
+      "n": 4,
+      "network (this model)": 0.4196,
+      "derivative, sigma 5": 0.3069,
+      "fluorescence": 0.1975,
+      "worst_neuron": 0.2547
+    },
+    "3": {
+      "n": 3,
+      "network (this model)": 0.4643,
+      "derivative, sigma 5": 0.4771,
+      "fluorescence": 0.2147,
+      "worst_neuron": 0.2969
+    },
+    "4": {
+      "n": 1,
+      "network (this model)": 0.5491,
+      "derivative, sigma 5": 0.2594,
+      "fluorescence": 0.281,
+      "worst_neuron": 0.5491
+    },
+    "5": {
+      "n": 2,
+      "network (this model)": 0.4321,
+      "derivative, sigma 5": 0.3317,
+      "fluorescence": 0.3281,
+      "worst_neuron": 0.347
+    },
+    "6": {
+      "n": 2,
+      "network (this model)": 0.6684,
+      "derivative, sigma 5": 0.5778,
+      "fluorescence": 0.3147,
+      "worst_neuron": 0.66
+    },
+    "7": {
+      "n": 7,
+      "network (this model)": 0.6623,
+      "derivative, sigma 5": 0.4758,
+      "fluorescence": 0.183,
+      "worst_neuron": 0.4088
+    },
+    "8": {
+      "n": 4,
+      "network (this model)": 0.7448,
+      "derivative, sigma 5": 0.5539,
+      "fluorescence": 0.1039,
+      "worst_neuron": 0.7137
+    },
+    "9": {
+      "n": 4,
+      "network (this model)": 0.5616,
+      "derivative, sigma 5": 0.3693,
+      "fluorescence": 0.109,
+      "worst_neuron": 0.4571
+    },
+    "10": {
+      "n": 5,
+      "network (this model)": 0.7059,
+      "derivative, sigma 5": 0.6409,
+      "fluorescence": 0.2971,
+      "worst_neuron": 0.3622
+    }
+  },
+  "beats_derivative": {
+    "n_datasets": 10,
+    "won": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "not_won": [
+      3
+    ]
+  },
+  "per_neuron": {
+    "1,4": 0.533,
+    "1,6": 0.4882,
+    "2,19": 0.5171,
+    "2,4": 0.2547,
+    "2,10": 0.4735,
+    "2,11": 0.4331,
+    "3,7": 0.4426,
+    "3,6": 0.2969,
+    "3,4": 0.6536,
+    "4,1": 0.5491,
+    "5,2": 0.5172,
+    "5,6": 0.347,
+    "6,8": 0.66,
+    "6,5": 0.6767,
+    "7,20": 0.7146,
+    "7,13": 0.7755,
+    "7,11": 0.4088,
+    "7,1": 0.6862,
+    "7,5": 0.726,
+    "7,7": 0.6587,
+    "7,18": 0.666,
+    "8,2": 0.7322,
+    "8,10": 0.7696,
+    "8,9": 0.7137,
+    "8,1": 0.7636,
+    "9,17": 0.6167,
+    "9,15": 0.4571,
+    "9,9": 0.5306,
+    "9,4": 0.642,
+    "10,10": 0.7926,
+    "10,14": 0.7976,
+    "10,8": 0.7862,
+    "10,1": 0.3622,
+    "10,11": 0.7912
+  },
+  "gap_over_derivative": 0.128,
+  "gap_paired_bootstrap_sd": 0.0179,
+  "mean_excluding_9_4": 0.5937
+}

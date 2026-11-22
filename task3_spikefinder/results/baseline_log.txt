@@ -1,0 +1,26 @@
+data: loaded cache_d4_neuron.npz
+174 neurons on a 25 Hz grid (4 released samples per bin): 51510 s = 14.3 h of recording
+input (channels, window) = (1, 128) = 5.1 s, standardized per neuron: True
+splits train 121 neurons / 6993 windows, valid 18 neurons / 1011 windows, test 34 neurons / 1891 windows   [(9,3), the duplicate's training copy, dropped]
+empty bins (40 ms each): 95.6%; the target is a spike count, 0-6 per 40 ms
+shortest neuron 55 s, longest 720 s, tail dropped per neuron < 5.1 s
+target scale (neuron mean count per bin): 0.0010 .. 0.4960 over the 139 train+valid neurons, a factor of 265 between the quietest and loudest neuron that is not at the floor  [1 neuron sits at the 0.001 floor, counted in the range but not in that factor]
+smoothing width, tuned on the 18 validation neurons:
+   sigma  1 samples =  10 ms   validation correlation 0.363
+   sigma  2 samples =  20 ms   validation correlation 0.415
+   sigma  3 samples =  30 ms   validation correlation 0.439
+   sigma  5 samples =  50 ms   validation correlation 0.455   <-- chosen
+   sigma  8 samples =  80 ms   validation correlation 0.454
+   sigma 12 samples = 120 ms   validation correlation 0.438
+   sigma 20 samples = 200 ms   validation correlation 0.396
+   sigma 30 samples = 300 ms   validation correlation 0.352
+   the whole curve spans 0.103 and its top two widths differ by 0.0003;
+   one test neuron is worth about 0.03, so this choice is nearly free of consequence
+
+both baselines, sigma = 5 samples (50 ms), on train, valid:
+   fluorescence train         mean over 121 neurons 0.191 [+0.175, +0.208]   mean over datasets 0.182   neurons -0.010 .. +0.427   undefined 0
+   derivative   train         mean over 121 neurons 0.460 [+0.428, +0.493]   mean over datasets 0.409   neurons +0.002 .. +0.762   undefined 0
+   fluorescence valid         mean over 18 neurons 0.191 [+0.146, +0.240]   mean over datasets 0.195   neurons +0.035 .. +0.403   undefined 0
+   derivative   valid         mean over 18 neurons 0.455 [+0.371, +0.543]   mean over datasets 0.416   neurons +0.106 .. +0.746   undefined 0
+
+the test split, from evaluate_task3.py: fluorescence 0.206, derivative 0.467; the task text quotes 0.21 and 0.45.   [pass --test to score it here instead]

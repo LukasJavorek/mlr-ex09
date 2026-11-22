@@ -1,0 +1,49 @@
+
+stage 2 - the optimizer on d4_neuron. 16 epochs x 3 seeds per arm.
+     seed 0: valid 0.620 at epoch  16/16 [59 s]
+     seed 1: valid 0.628 at epoch   8/16 [58 s]
+     seed 2: valid 0.613 at epoch  10/16 [58 s]
+  lr 0.001                             valid 0.620 +- 0.006 over 3 seeds    6993 windows      174 s
+     seed 0: valid 0.629 at epoch   7/16 [57 s]
+     seed 1: valid 0.626 at epoch  11/16 [57 s]
+     seed 2: valid 0.629 at epoch  14/16 [58 s]
+  lr 0.003                             valid 0.628 +- 0.001 over 3 seeds    6993 windows      172 s
+     seed 0: valid 0.621 at epoch  15/16 [58 s]
+     seed 1: valid 0.623 at epoch   8/16 [57 s]
+     seed 2: valid 0.620 at epoch  14/16 [57 s]
+  lr 0.01                              valid 0.621 +- 0.001 over 3 seeds    6993 windows      172 s
+     seed 0: valid 0.629 at epoch   7/16 [58 s]
+     seed 1: valid 0.626 at epoch  11/16 [57 s]
+     seed 2: valid 0.629 at epoch  14/16 [58 s]
+  3 levels [16, 32, 64]                valid 0.628 +- 0.001 over 3 seeds    6993 windows      173 s
+     seed 0: valid 0.628 at epoch  13/16 [88 s]
+     seed 1: valid 0.634 at epoch  16/16 [87 s]
+     seed 2: valid 0.628 at epoch   8/16 [88 s]
+  4 levels [16, 32, 64, 128]           valid 0.630 +- 0.003 over 3 seeds    6993 windows      262 s
+     seed 0: valid 0.631 at epoch  12/16 [135 s]
+     seed 1: valid 0.631 at epoch  16/16 [142 s]
+     seed 2: valid 0.640 at epoch  12/16 [143 s]
+  5 levels [16, 32, 64, 128, 256]      valid 0.634 +- 0.004 over 3 seeds    6993 windows      419 s
+   depth: 4 levels sees 3.7 s, which covers the audit's slowest kernel (2.3 s) inside the 5.1 s window; the candidates that tie within 0.005 see 3.7 s, 7.5 s, and only these fit: 4
+     seed 0: valid 0.631 at epoch  13/16 [150 s]
+     seed 1: valid 0.626 at epoch  10/16 [150 s]
+     seed 2: valid 0.630 at epoch  15/16 [151 s]
+  batch 16                             valid 0.629 +- 0.002 over 3 seeds    6993 windows      449 s
+     seed 0: valid 0.628 at epoch  13/16 [92 s]
+     seed 1: valid 0.634 at epoch  16/16 [93 s]
+     seed 2: valid 0.628 at epoch   8/16 [92 s]
+  batch 32                             valid 0.630 +- 0.003 over 3 seeds    6993 windows      276 s
+     seed 0: valid 0.635 at epoch  11/16 [65 s]
+     seed 1: valid 0.634 at epoch   8/16 [64 s]
+     seed 2: valid 0.627 at epoch  11/16 [63 s]
+  batch 64                             valid 0.632 +- 0.004 over 3 seeds    6993 windows      191 s
+
+   the long curve at the winner (lr 0.003, [16, 32, 64, 128], batch 64): 90 epochs x 1 seed
+     seed 0: valid 0.635 at epoch  11/90 [357 s]
+  long curve, 4 levels                 valid 0.635 +- 0.000 over 1 seeds    6993 windows      357 s
+   the validation correlation peaks at epoch 11 of 90; the training loss is still falling there (its curve is in the json) - the gap between the two is why the epoch is chosen on the correlation
+wrote results\choices.json
+wrote figures\validation_choices.png
+wrote figures\validation_curves.png
+
+stage took 44.2 min on cpu

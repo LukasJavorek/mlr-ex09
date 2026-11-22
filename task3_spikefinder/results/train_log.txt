@@ -1,0 +1,75 @@
+TASK 3 SPECIFICATION
+====================================================================================================
+| | your answer |
+| --- | --- |
+| network input (shape) | shape (1, 512) - one neuron's fluorescence, resampled 100 Hz -> 25 Hz by averaging every 4 samples (86-100% of the power is below 5 Hz and <=0.7% above 25 Hz, so this throws nothing away), standardized per neuron from that neuron's own trace only. 512 samples = 20.5 s, 4x the context per layer 100 Hz would give, which the calcium kernel needs (0.4-2.3 s to fall back to half its peak). Windows are cut at the end of the real part, so none contains NaN padding |
+| network output (shape) | shape (1, 512) - the predicted spike rate for the same window at the same 25 Hz: one rate per 40 ms bin, the metric's own resolution. Fully convolutional, every position predicted and used, nothing cropped |
+| last layer | 1 x 1 convolution to 1 channel, then softplus - UNet's own head with c_out=1, no pooling and no Linear. A rate is non-negative and unbounded above; softplus keeps a gradient where 95.6% of the bins sit, where ReLU would be dead exactly at 0 |
+| training loss | Poisson negative log-likelihood on the 40 ms counts, `rho - r log rho`, with the rate expressed in units of that neuron's own mean rate, averaged within a window and then over the batch. A plain MSE over concatenated windows is a different objective: 10 of the 174 neurons hold 30% of its weight |
+| evaluation metric | the challenge's own, unchanged: sum predicted rate and true counts into 40 ms bins, Pearson correlation per test neuron, mean over the 34 test neurons. Reported next to the per-dataset means, the mean over the ten datasets instead of over neurons, the count of undefined (constant) predictions, and the +-0.005 noise floor of that mean |
+| baseline | both classical guesses, rebuilt on this split rather than quoted, smoothing width tuned on the validation neurons only: the fluorescence itself and its smoothed positive derivative. The task text quotes 0.21 and 0.45 |
+
+Assumptions behind the table: the given split and the 40 ms metric are kept exactly as
+the data cell builds them. Three things the table cannot hold, because the audit found
+them. Dataset 9 contains one neuron twice (columns 3 and 4 are the same recording,
+spikes identical, one copy in train and one in test), so (9,3) is dropped from the
+training set - 1 of 122 neurons, no test neuron changes. The model is selected on the
+validation **correlation**, not on the loss: part1's train() early-stops on the loss,
+and a Poisson loss and a Pearson correlation need not peak in the same epoch. And
+nothing is tuned per dataset - five of the ten datasets have exactly one validation
+neuron, so a per-dataset choice would be fitting one number.
+
+AS BUILT - every hyperparameter chosen on the validation split
+----------------------------------------------------------------------------------------------------
+  data               4-sample mean to 25 Hz, 128 samples = 5.1 s, neuron statistics, duplicate dropped: True
+  target             counts per 40 ms bin, in units of the neuron's own mean rate
+  network            UNet(dim=1, c_in=1, c_out=1, widths=[16, 32, 64, 128]) + softplus
+  loss               poisson_nll(rho - r*log rho), per-window then per-batch mean
+  optimizer          Adam, lr 0.003, batch 64
+  epochs             24 trained, the best validation-correlation epoch kept
+  baseline           smoothed positive derivative, sigma 5 samples (50 ms), tuned on validation
+  seed               0
+  selected on        validation correlation over whole recordings; the test split is read once, by evaluate_task3.py
+
+TRAINING  widths=[16, 32, 64, 128]  lr=0.003  batch=64  epochs=24  seed=0
+          data: d4_neuron, window 128 = 5.1 s, target scale neuron, duplicate dropped: True
+data: loaded cache_d4_neuron.npz
+174 neurons on a 25 Hz grid (4 released samples per bin): 51510 s = 14.3 h of recording
+input (channels, window) = (1, 128) = 5.1 s, standardized per neuron: True
+splits train 121 neurons / 6993 windows, valid 18 neurons / 1011 windows, test 34 neurons / 1891 windows   [(9,3), the duplicate's training copy, dropped]
+empty bins (40 ms each): 95.6%; the target is a spike count, 0-6 per 40 ms
+shortest neuron 55 s, longest 720 s, tail dropped per neuron < 5.1 s
+target scale (neuron mean count per bin): 0.0010 .. 0.4960 over the 139 train+valid neurons, a factor of 496  [1 at the 0.001 floor]
+          0.17 M parameters, 6993 training windows, 18 validation neurons scored every epoch
+
+   epoch   1/24  loss -0.4600 -> -0.8406   valid correlation 0.555   <-- best   [3 s]
+   epoch   2/24  loss -0.8518 -> -0.9568   valid correlation 0.591   <-- best   [7 s]
+   epoch   3/24  loss -0.8963 -> -0.9772   valid correlation 0.579   [11 s]
+   epoch   4/24  loss -0.9596 -> -1.0572   valid correlation 0.604   <-- best   [14 s]
+   epoch   5/24  loss -0.9801 -> -1.0885   valid correlation 0.613   <-- best   [18 s]
+   epoch   6/24  loss -1.0054 -> -1.0919   valid correlation 0.604   [22 s]
+   epoch   7/24  loss -1.0362 -> -1.0816   valid correlation 0.611   [25 s]
+   epoch   8/24  loss -1.0595 -> -1.1257   valid correlation 0.614   <-- best   [29 s]
+   epoch   9/24  loss -1.0579 -> -1.0423   valid correlation 0.613   [32 s]
+   epoch  10/24  loss -1.0844 -> -1.1218   valid correlation 0.614   [36 s]
+   epoch  11/24  loss -1.1131 -> -1.1984   valid correlation 0.635   <-- best   [40 s]
+   epoch  12/24  loss -1.1224 -> -1.1179   valid correlation 0.618   [43 s]
+   epoch  13/24  loss -1.1245 -> -1.2263   valid correlation 0.633   [47 s]
+   epoch  14/24  loss -1.1674 -> -1.1395   valid correlation 0.619   [50 s]
+   epoch  15/24  loss -1.1873 -> -1.1789   valid correlation 0.617   [54 s]
+   epoch  16/24  loss -1.1874 -> -1.1228   valid correlation 0.594   [58 s]
+   epoch  17/24  loss -1.2019 -> -1.2152   valid correlation 0.622   [61 s]
+   epoch  18/24  loss -1.2507 -> -1.1306   valid correlation 0.614   [65 s]
+   epoch  19/24  loss -1.2812 -> -1.1823   valid correlation 0.592   [69 s]
+   epoch  20/24  loss -1.2775 -> -1.0882   valid correlation 0.592   [72 s]
+   epoch  21/24  loss -1.2939 -> -1.1134   valid correlation 0.605   [76 s]
+   epoch  22/24  loss -1.3258 -> -0.9388   valid correlation 0.576   [79 s]
+   epoch  23/24  loss -1.3464 -> -1.0764   valid correlation 0.595   [83 s]
+   epoch  24/24  loss -1.3878 -> -1.1394   valid correlation 0.613   [87 s]
+   best validation correlation 0.635; trained in 87 s
+
+selected epoch 11 by validation correlation 0.635; the validation loss alone would have picked epoch 13 (+0.633 correlation). They disagree whenever the two criteria peak apart, which is why the spec names the correlation.
+wrote results/model.pt (0.17 M parameters) and results/train_log.json
+wrote figures\training_curves.png
+
+1.5 min of training on cpu

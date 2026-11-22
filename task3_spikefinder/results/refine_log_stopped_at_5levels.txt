@@ -1,0 +1,28 @@
+
+stage 2 - the optimizer on d4_neuron. 16 epochs x 3 seeds per arm.
+     seed 0: valid 0.620 at epoch  16/16 [56 s]
+     seed 1: valid 0.628 at epoch   8/16 [56 s]
+     seed 2: valid 0.613 at epoch  10/16 [58 s]
+  lr 0.001                             valid 0.620 +- 0.006 over 3 seeds    6993 windows      169 s
+     seed 0: valid 0.629 at epoch   7/16 [57 s]
+     seed 1: valid 0.626 at epoch  11/16 [57 s]
+     seed 2: valid 0.629 at epoch  14/16 [58 s]
+  lr 0.003                             valid 0.628 +- 0.001 over 3 seeds    6993 windows      171 s
+     seed 0: valid 0.621 at epoch  15/16 [57 s]
+     seed 1: valid 0.623 at epoch   8/16 [57 s]
+     seed 2: valid 0.620 at epoch  14/16 [57 s]
+  lr 0.01                              valid 0.621 +- 0.001 over 3 seeds    6993 windows      170 s
+     seed 0: valid 0.629 at epoch   7/16 [56 s]
+     seed 1: valid 0.626 at epoch  11/16 [57 s]
+     seed 2: valid 0.629 at epoch  14/16 [56 s]
+  3 levels [16, 32, 64]                valid 0.628 +- 0.001 over 3 seeds    6993 windows      169 s
+     seed 0: valid 0.628 at epoch  13/16 [88 s]
+     seed 1: valid 0.634 at epoch  16/16 [87 s]
+     seed 2: valid 0.628 at epoch   8/16 [87 s]
+  4 levels [16, 32, 64, 128]           valid 0.630 +- 0.003 over 3 seeds    6993 windows      261 s
+     seed 0: valid 0.631 at epoch  12/16 [135 s]
+     seed 1: valid 0.631 at epoch  16/16 [136 s]
+     seed 2: valid 0.640 at epoch  12/16 [136 s]
+  5 levels [16, 32, 64, 128, 256]      valid 0.634 +- 0.004 over 3 seeds    6993 windows      407 s
+     seed 0: valid 0.628 at epoch  12/16 [211 s]
+     seed 1: valid 0.635 at epoch  11/16 [211 s]

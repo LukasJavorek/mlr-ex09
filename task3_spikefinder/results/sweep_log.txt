@@ -1,0 +1,40 @@
+
+stage 1 - the data. 16 epochs x 3 seeds per arm; every arm shares widths=[16, 32, 64], lr 3e-3, batch 32.
+     seed 0: valid 0.607 at epoch  11/16 [102 s]
+     seed 1: valid 0.616 at epoch  11/16 [99 s]
+     seed 2: valid 0.604 at epoch  12/16 [100 s]
+  decimate 1 (100 Hz, window 2050)     valid 0.609 +- 0.005 over 3 seeds    1695 windows      301 s
+     seed 0: valid 0.614 at epoch   8/16 [46 s]
+     seed 1: valid 0.620 at epoch  13/16 [45 s]
+     seed 2: valid 0.624 at epoch  14/16 [45 s]
+  decimate 2 (50 Hz, window 1025)      valid 0.620 +- 0.004 over 3 seeds    1695 windows      136 s
+     seed 0: valid 0.612 at epoch   9/16 [26 s]
+     seed 1: valid 0.624 at epoch  12/16 [27 s]
+     seed 2: valid 0.617 at epoch  13/16 [27 s]
+  decimate 4 (25 Hz, window 512)       valid 0.618 +- 0.005 over 3 seeds    1695 windows       80 s
+     seed 0: valid 0.629 at epoch   7/16 [61 s]
+     seed 1: valid 0.626 at epoch  11/16 [61 s]
+     seed 2: valid 0.629 at epoch  14/16 [60 s]
+  window 128 samples (5 s)             valid 0.628 +- 0.001 over 3 seeds    6993 windows      182 s
+     seed 0: valid 0.620 at epoch  10/16 [39 s]
+     seed 1: valid 0.626 at epoch  10/16 [39 s]
+     seed 2: valid 0.625 at epoch  14/16 [39 s]
+  window 256 samples (10 s)            valid 0.624 +- 0.002 over 3 seeds    3481 windows      117 s
+     seed 0: valid 0.608 at epoch  12/16 [22 s]
+     seed 1: valid 0.613 at epoch  14/16 [23 s]
+     seed 2: valid 0.615 at epoch  15/16 [23 s]
+  window 1024 samples (41 s)           valid 0.612 +- 0.003 over 3 seeds     795 windows       67 s
+     seed 0: valid 0.618 at epoch  14/16 [26 s]
+     seed 1: valid 0.623 at epoch  13/16 [26 s]
+     seed 2: valid 0.618 at epoch  14/16 [26 s]
+  standardize none                     valid 0.620 +- 0.002 over 3 seeds    1695 windows       79 s
+     seed 0: valid 0.588 at epoch  15/16 [26 s]
+     seed 1: valid 0.577 at epoch  15/16 [26 s]
+     seed 2: valid 0.571 at epoch  15/16 [26 s]
+  target scale global                  valid 0.579 +- 0.007 over 3 seeds    1695 windows       78 s
+
+   stage 1 winner: window 128 samples (5 s) at 0.628
+wrote results\choices.json
+wrote figures\validation_choices.png
+
+stage took 17.4 min on cpu
