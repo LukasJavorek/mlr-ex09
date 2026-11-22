@@ -1,0 +1,11 @@
+# Task 6 (colourisation from luminance, Imagenette2-160). Tested with the versions
+# pinned here, on Python 3.13. No GPU is needed; every second quoted in RESULTS.md
+# was measured on a 6-thread CPU (torch.set_num_threads(6)).
+# On Linux with an NVIDIA GPU, replace the torch line with the CUDA build:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+# and set fitting.threads() to whatever the machine has; the numbers in RESULTS.md
+# are not portable across that change, so re-run run_all.py rather than editing.
+numpy==2.5.5
+matplotlib==3.11.2
+torch==2.15.0
+Pillow==13.0.0

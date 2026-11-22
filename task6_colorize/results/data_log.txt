@@ -1,0 +1,21 @@
+data: C:\dev\9\task6_colorize\data\cache_s64.npz
+    train  (9469, 64, 64, 3)  sha1 97f9d00e5443  colourfulness 0.0424
+    valid   (100, 64, 64, 3)  sha1 ab5ac93ddb67  colourfulness 0.0402
+     test   (500, 64, 64, 3)  sha1 46d36b8a4283  colourfulness 0.0407
+  valrest  (3325, 64, 64, 3)  sha1 591d6635a13c  colourfulness 0.0415
+
+    train Y mean 116.8   colourfulness 0.0424   gray-vs-photo 0.0519/1 (13.25 of 255)   181 photos black and white already   e.g. train/n01440764/ILSVRC2012_val_00000293.JPEG
+    valid Y mean 116.4   colourfulness 0.0402   gray-vs-photo 0.0498/1 (12.69 of 255)     3 photos black and white already   e.g. val/n01440764/n01440764_6052.JPEG
+     test Y mean 115.3   colourfulness 0.0407   gray-vs-photo 0.0498/1 (12.71 of 255)     8 photos black and white already   e.g. val/n03425413/n03425413_9652.JPEG
+  valrest Y mean 116.3   colourfulness 0.0415   gray-vs-photo 0.0508/1 (12.95 of 255)    63 photos black and white already   e.g. val/n03417042/n03417042_24020.JPEG
+
+cross-check against the audit's arrays:
+    train: (9469, 64, 64, 3) identical to the audit's, sha1 97f9d00e5443
+    valid: (100, 64, 64, 3) identical to the audit's, sha1 ab5ac93ddb67
+     test: (500, 64, 64, 3) identical to the audit's, sha1 46d36b8a4283
+
+'gray-vs-photo' is mean |rgb_of(Y, 0, 0) - photo| in units of 1: about 0.05 on every split, ~13 of 255. It is 0 only where the photo was already black and white. Y is copied back unchanged, so a colouriser competes for the chroma and nothing else.
+the black-and-white photos are why the PSNR has to be clipped at a stated dB (audit section 2): the baseline is perfect on them, and 1/log(0) is the code's epsilon.
+
+splits {'train': 9469, 'valid': 100, 'test': 500, 'valrest': 3325}, seed 0
+(6 s)

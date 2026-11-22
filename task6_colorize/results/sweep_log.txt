@@ -1,0 +1,88 @@
+TASK 6 SPECIFICATION - colourisation from luminance
+====================================================================================================
+| | A - regression | B / B+ - bins |
+| --- | --- | --- |
+| network input (shape) | `(B, 1, 64, 64)` float32 in [0, 1]: the luminance `Y = rgb @ [0.299, 0.587, 0.114] / 255` of the 64x64 centre crop - one channel, and the *same* Y that defines the target | same |
+| network output (shape) | `(B, 2, 64, 64)`: (Cb, Cr) with neutral at 0, in units of +-128 (divide by 128, so the target sits inside +-0.13 and a zero-initialised head starts exactly at the gray baseline) | `(B, 256, 64, 64)` logits: a 16x16 grid on (Cb, Cr). Not 36 bins - a 36-colour vocabulary caps the PSNR at 22.3 dB with a perfect classifier |
+| last layer | 1x1 conv, **no activation**. RGB is rebuilt as `rgb = ycc_inv(Y, 128 * out)` with **Y written back unchanged**, then clamped to [0, 255] | 1x1 conv to 256 channels; the softmax lives inside the loss. **B** = `argmax p`; **B+** = `argmax(log p - gamma * log pbar)` at inference only |
+| training loss | **L1** on the two chroma planes, plus **one scalar alpha calibrated on valid** (the uncalibrated optimum keeps 29% of the colour, which *is* the task's "dull brownish gray") | cross-entropy on the 256 bin labels, unweighted. The prior pull belongs at inference only |
+| evaluation metric | PSNR (per photo, each photo clipped at 40 dB, with median and pooled beside it), chroma L1, colourfulness - from one function, `metrics.score` - plus photos beating gray and the split by colour quintile | the same three, plus top-1 bin accuracy **only ever against its ceiling at this grid - 30.1%, measured on the training photos by `metrics.ceilings`; the audit's better-known 18.8% is the same lookup table at a 32x32 chroma grid** - and that ceiling bounds a colour *lookup table* (chroma read off one 64-bin number per pixel), not a network, so beating it is a result rather than a contradiction. Never a headline on its own |
+| baseline | the gray input (chroma = 0), conventions attached: test 25.36 dB mean, 23.21 median, 24.06 clipped at 40, 21.11 pooled, chroma L1 0.0804, colourfulness 0.0000 | the same baseline, plus the ceiling of the binned truth at 256 bins (31.54 dB on the 100 valid photos) - the one hard ceiling here: no decoder that can only emit bin centres passes it |
+
+Assumptions behind the table:
+  * the input is the photo's own luminance and the output is added to it; the network
+    never predicts Y, so 99% of the signal cannot be damaged by it (spec item 2);
+  * colourfulness means mean |chroma| over pixels and channels, /255 - the definition
+    whose value on the real photos is the task's 0.04 (it gives 0.0407);
+  * no colour augmentation exists in this pipeline: jitter, channel shuffle and
+    autocontrast would edit the target (spec item 8);
+  * `valid` (100 photos, the handout's split) decides every choice; `valrest` (the 3325
+    photos the handout leaves unused) is a confirmation column only; `test` (500) is
+    read once, by evaluate_task6.py, and decides nothing.
+
+The constants the code enforces rather than restates:
+  chroma units (neutral 0, +-128)    colorspace.CHROMA_SCALE    128.0
+  bin grid (route B)                 colorspace.GRID            16
+  bins = grid squared                grid x grid                256
+  PSNR clip per photo, dB            metrics.CLIP_DB            40.0
+  MSE floor (sets the 120 dB ceiling) metrics.EPS                1e-12
+  luminance weights                  colorspace.Y_W             [0.29899999499320984, 0.5870000123977661, 0.11400000005960464]
+  bootstrap draws / seed             metrics.DRAWS / SEED       (2000, 0)
+
+Selection rules R1-R5 are in this file's docstring, written before the first arm ran. Nothing below re-writes them.
+
+subset (2367, 64, 64, 3) of 9469 training photos, fixed for every arm; scored on the 100 validation photos; route-B prior entropy 2.5501 nats, its modal cell 26.7% of pixels
+budget: epochs 4/6/4 for stages 1/2/3
+
+====================================================================================================
+STAGE 1 - width and learning rate, 2367 photos, 4 epochs, 12 arms
+====================================================================================================
+  1/A w16-32-64 lr0.003               117410 p  loss 0.07613 @ep 4    24.54 dB  0.011 cf [ 1.0 min]
+  1/A w16-32-64 lr0.01                117410 p  loss 0.07808 @ep 1    24.51 dB  0.009 cf [ 1.0 min]
+  1/A w32-64-128 lr0.003              467266 p  loss 0.07722 @ep 4    24.35 dB  0.012 cf [ 2.7 min]
+  1/A w32-64-128 lr0.01               467266 p  loss 0.07810 @ep 1    24.61 dB  0.006 cf [ 2.7 min]
+  1/A w16-32-64-128 lr0.003           483170 p  loss 0.07733 @ep 3    24.62 dB  0.009 cf [ 1.2 min]
+  1/A w16-32-64-128 lr0.01            483170 p  loss 0.07765 @ep 3    24.52 dB  0.011 cf [ 1.2 min]
+  1/B w16-32-64 lr0.003               121728 p  loss 2.31804 @ep 4    23.16 dB  0.032 cf [ 1.3 min]
+  1/B w16-32-64 lr0.01                121728 p  loss 2.39396 @ep 2    23.02 dB  0.031 cf [ 1.3 min]
+  1/B w32-64-128 lr0.003              475648 p  loss 2.32281 @ep 4    23.05 dB  0.033 cf [ 2.9 min]
+  1/B w32-64-128 lr0.01               475648 p  loss 2.35853 @ep 2    23.09 dB  0.030 cf [ 2.9 min]
+  1/B w16-32-64-128 lr0.003           487488 p  loss 2.35732 @ep 2    23.09 dB  0.030 cf [ 1.5 min]
+  1/B w16-32-64-128 lr0.01            487488 p  loss 2.33603 @ep 4    23.02 dB  0.031 cf [ 1.5 min]
+  -> stage 1 keeps route A: 1/A w16-32-64 lr0.003 (117410 parameters, loss 0.07613)
+  -> stage 1 keeps route B: 1/B w16-32-64 lr0.003 (121728 parameters, loss 2.31804)
+
+====================================================================================================
+STAGE 2 - batch size, flip arm, and route B's pixel count, 6 epochs
+====================================================================================================
+  2/A b32 flip0                       117410 p  loss 0.07605 @ep 5    24.48 dB  0.012 cf [ 1.5 min]
+  2/A b32 flip1                       117410 p  loss 0.07547 @ep 5    24.60 dB  0.011 cf [ 1.5 min]  flip
+  2/A b64 flip0                       117410 p  loss 0.07632 @ep 2    24.47 dB  0.013 cf [ 1.6 min]
+  2/A b64 flip1                       117410 p  loss 0.07501 @ep 4    24.55 dB  0.014 cf [ 1.6 min]  flip
+  2/B b32 flip0                       121728 p  loss 2.30922 @ep 5    23.14 dB  0.034 cf [ 1.9 min]
+  2/B b32 flip1                       121728 p  loss 2.30092 @ep 6    23.08 dB  0.034 cf [ 1.9 min]  flip
+  2/B b64 flip0                       121728 p  loss 2.28967 @ep 6    23.22 dB  0.032 cf [ 2.0 min]
+  2/B b64 flip1                       121728 p  loss 2.32392 @ep 4    23.13 dB  0.031 cf [ 2.0 min]  flip
+  2/B pixels512                       121728 p  loss 2.30341 @ep 6    23.23 dB  0.032 cf [ 1.7 min]
+  2/B pixels1024                      121728 p  loss 2.29639 @ep 6    23.24 dB  0.032 cf [ 1.9 min]
+  2/B pixelsall                       121728 p  loss 2.29729 @ep 6    23.21 dB  0.032 cf [ 3.3 min]  full-pixel
+  -> stage 2 keeps route A: batch 64, flip True (loss 0.07501; the same arm without the flip 0.07632)
+  -> stage 2 keeps route B: batch 64, flip False (loss 2.28967; the same arm with the flip 2.32392)
+  -> stage 2 keeps route B pixels = 1024 (loss 2.29639, 1.9 min for 6 epochs at this subset)
+
+====================================================================================================
+STAGE 3 - three seeds of the chosen configuration, 4 epochs (rule R4's yardstick)
+====================================================================================================
+  3/A seed0                           117410 p  loss 0.07685 @ep 3    24.41 dB  0.013 cf [ 1.0 min]
+  3/A seed1                           117410 p  loss 0.07617 @ep 4    24.67 dB  0.011 cf [ 1.0 min]
+  3/A seed2                           117410 p  loss 0.07792 @ep 2    24.12 dB  0.015 cf [ 1.0 min]
+  3/B seed0                           121728 p  loss 2.36206 @ep 2    23.12 dB  0.030 cf [ 1.3 min]
+  3/B seed1                           121728 p  loss 2.35911 @ep 3    22.97 dB  0.031 cf [ 1.3 min]
+  3/B seed2                           121728 p  loss 2.33734 @ep 3    23.13 dB  0.033 cf [ 1.3 min]
+  -> route A: across seeds, best validation loss sd 0.00088 (1.15% of the loss) and valid colourfulness sd 0.0022 (16.6% of its value). Rule R4: stage-1/2 differences below 2 of these are reported as ties.
+  -> route B: across seeds, best validation loss sd 0.01350 (0.57% of the loss) and valid colourfulness sd 0.0011 (3.6% of its value). Rule R4: stage-1/2 differences below 2 of these are reported as ties.
+
+wrote results/choices.json (29 arms in 48.9 min)
+wrote figures\choices.png
+
+Nothing above touched a test photo. The only arrays any arm ever saw were the fixed training subset and the 100 validation photos; the 500 test photos and the 3325 unused val photos were never put into a dataset by this script.

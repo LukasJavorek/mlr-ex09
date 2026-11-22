@@ -1,0 +1,43 @@
+Rule R4 applied to the recorded arms: which stage-1/2 differences the seed can move.
+Nothing below trains anything; every number is read from results/choices.json.
+
+route A: the stage-3 seed spread of the best validation loss is 0.00088 (1.15% of the loss), so R4's floor is 2 sd = 0.00176.
+  R3's indifference band is 0.2% of the best loss = 0.00015, and `pick` asks an arm to be inside both to count as tied: here the R3 band is the tighter, so it is the one that decides the arm, and R4 decides the wording below.
+
+  stage1:
+    1/A w16-32-64 lr0.003    0.07613  +0.00000   chosen
+    1/A w32-64-128 lr0.003   0.07722  +0.00109   inside 2 sd: R4 calls this a tie with the winner
+    1/A w16-32-64-128 lr0.003 0.07733  +0.00120   inside 2 sd: R4 calls this a tie with the winner
+    1/A w16-32-64-128 lr0.01 0.07765  +0.00152   inside 2 sd: R4 calls this a tie with the winner
+    1/A w16-32-64 lr0.01     0.07808  +0.00195   outside 2 sd: a difference the seed cannot explain
+    1/A w32-64-128 lr0.01    0.07810  +0.00197   outside 2 sd: a difference the seed cannot explain
+
+  stage2:
+    2/A b64 flip1            0.07501  +0.00000   chosen
+    2/A b32 flip1            0.07547  +0.00046   inside 2 sd: R4 calls this a tie with the winner
+    2/A b32 flip0            0.07605  +0.00104   inside 2 sd: R4 calls this a tie with the winner
+    2/A b64 flip0            0.07632  +0.00131   inside 2 sd: R4 calls this a tie with the winner
+
+route B: the stage-3 seed spread of the best validation loss is 0.01350 (0.57% of the loss), so R4's floor is 2 sd = 0.02700.
+  R3's indifference band is 0.2% of the best loss = 0.00458, and `pick` asks an arm to be inside both to count as tied: here the R3 band is the tighter, so it is the one that decides the arm, and R4 decides the wording below.
+
+  stage1:
+    1/B w16-32-64 lr0.003    2.31804  +0.00000   chosen
+    1/B w32-64-128 lr0.003   2.32281  +0.00477   inside 2 sd: R4 calls this a tie with the winner
+    1/B w16-32-64-128 lr0.01 2.33603  +0.01799   inside 2 sd: R4 calls this a tie with the winner
+    1/B w16-32-64-128 lr0.003 2.35732  +0.03928   outside 2 sd: a difference the seed cannot explain
+    1/B w32-64-128 lr0.01    2.35853  +0.04049   outside 2 sd: a difference the seed cannot explain
+    1/B w16-32-64 lr0.01     2.39396  +0.07592   outside 2 sd: a difference the seed cannot explain
+
+  stage2:
+    2/B b64 flip0            2.28967  +0.00000   chosen
+    2/B b32 flip1            2.30092  +0.01125   inside 2 sd: R4 calls this a tie with the winner
+    2/B b32 flip0            2.30922  +0.01955   inside 2 sd: R4 calls this a tie with the winner
+    2/B b64 flip1            2.32392  +0.03425   outside 2 sd: a difference the seed cannot explain
+
+  the pixel count: the same objective sampled at three costs (smoke_test.py proves they are the same objective):
+    2/B pixels1024           2.29639  +0.00000      19 s/epoch   chosen
+    2/B pixelsall            2.29729  +0.00090      33 s/epoch   inside 2 sd: R4 calls this a tie with the winner
+    2/B pixels512            2.30341  +0.00702      17 s/epoch   inside 2 sd: R4 calls this a tie with the winner
+    a tie here is therefore decided on s/epoch, which is the honest reading: the arm that costs least, not the arm whose loss happened to be smallest.
+

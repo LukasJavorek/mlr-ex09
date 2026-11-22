@@ -1,0 +1,559 @@
+Task 6, end to end. 7 steps, stopping after 7
+
+####################################################################################################
+# [1/7] the arrays and their inventory
+#   utf8 col6_data.py
+####################################################################################################
+data: C:\dev\9\task6_colorize\data\cache_s64.npz
+    train  (9469, 64, 64, 3)  sha1 97f9d00e5443  colourfulness 0.0424
+    valid   (100, 64, 64, 3)  sha1 ab5ac93ddb67  colourfulness 0.0402
+     test   (500, 64, 64, 3)  sha1 46d36b8a4283  colourfulness 0.0407
+  valrest  (3325, 64, 64, 3)  sha1 591d6635a13c  colourfulness 0.0415
+
+    train Y mean 116.8   colourfulness 0.0424   gray-vs-photo 0.0519/1 (13.25 of 255)   181 photos black and white already   e.g. train/n01440764/ILSVRC2012_val_00000293.JPEG
+    valid Y mean 116.4   colourfulness 0.0402   gray-vs-photo 0.0498/1 (12.69 of 255)     3 photos black and white already   e.g. val/n01440764/n01440764_6052.JPEG
+     test Y mean 115.3   colourfulness 0.0407   gray-vs-photo 0.0498/1 (12.71 of 255)     8 photos black and white already   e.g. val/n03425413/n03425413_9652.JPEG
+  valrest Y mean 116.3   colourfulness 0.0415   gray-vs-photo 0.0508/1 (12.95 of 255)    63 photos black and white already   e.g. val/n03417042/n03417042_24020.JPEG
+
+cross-check against the audit's arrays:
+    train: (9469, 64, 64, 3) identical to the audit's, sha1 97f9d00e5443
+    valid: (100, 64, 64, 3) identical to the audit's, sha1 ab5ac93ddb67
+     test: (500, 64, 64, 3) identical to the audit's, sha1 46d36b8a4283
+
+'gray-vs-photo' is mean |rgb_of(Y, 0, 0) - photo| in units of 1: about 0.05 on every split, ~13 of 255. It is 0 only where the photo was already black and white. Y is copied back unchanged, so a colouriser competes for the chroma and nothing else.
+the black-and-white photos are why the PSNR has to be clipped at a stated dB (audit section 2): the baseline is perfect on them, and 1/log(0) is the code's epsilon.
+
+splits {'train': 9469, 'valid': 100, 'test': 500, 'valrest': 3325}, seed 0
+(6 s)
+# [1/7] done in 0.1 min  ->  results/data_log.txt
+
+####################################################################################################
+# [2/7] the smoke test: every check, nothing trained
+#   utf8 smoke_test.py
+####################################################################################################
+[ok] data: train (9469, 64, 64, 3), valid (100, 64, 64, 3), test (500, 64, 64, 3), valrest 3325 - the notebook's split sizes
+[ok] split and cache: all three arrays byte-identical to the audit's; valid + test + valrest partition the 3925 val photos exactly; 97f9d00e5443 and ab5ac93ddb67 and 46d36b8a4283
+[ok] the audit's data facts: colourfulness train/valid/test 0.0424 / 0.0402 / 0.0407 (the audit: 0.0424 / 0.0402 / 0.0407); photos already black and white {'train': 181, 'valid': 3, 'test': 8} (the audit: 181 / 3 / 8)
+[ok] colour transform: round-trip residue 0.00014 of 255 on 100 real photos; the gray baseline's chroma is 4.4e-09 - not exactly 0, because 0.299+0.587+0.114 is not exactly 1 in float32, so recomputing Y from R=G=B=Y leaves a residue at float precision, seven orders of magnitude below the 0.0402 this measures on real colour; its Y differs from the input Y by at most 1.53e-05; and grey written directly as a stack of Y scores the same PSNR to 0.0e+00 dB, so the baseline does not depend on the trip through rgb_of
+[ok] metric == the audit's metric: gray on valid: 26.94 dB mean (audit 26.94), 24.45 clipped at 40 (24.46), 21.06 pooled (21.06), median 23.95 (23.95), chroma L1 0.0804 (0.0804) - all within 0.02; chromaL1 == 2 x truth colourfulness (0.0402) as the two definitions require
+[ok] zero-init route A == the baseline: max per-photo PSNR difference 0.00e+00 dB over 20 photos, and its chroma is exactly 0 - so Y is written back unchanged and the +-128 scale is applied once, not twice
+[ok] route-B init == the prior: p is constant across pixels and photos (spread 0.0e+00) and equals the training marginal to 1.7e-06; its cross-entropy is 2.5501 nats = H(prior) 2.5501 (not log 256 = 5.545, which a zero-bias init would give). An epoch-1 route-B model therefore starts at the prior's own accuracy, so the sweep's first epoch is readable; the max-subtracting log-softmax that `decode` writes by hand agrees with `torch.log_softmax` to 1.8e-15
+[ok] sampled head == full head: max |difference| 1.49e-07 over 2341 pixels of a randomly-initialised route-B model (256 logits): the 1024-of-4096 pixel loss is the same objective, not a different one
+[ok] the bin grid: every cell centre within 8.0 of its pixels; the 256-bin binned truth scores 31.54 dB on valid, the audit's route-B ceiling (31.54) - so this is the grid those ceilings are for
+[ok] ceilings, and the grid they depend on: 32x32: lookup-table accuracy 18.77% (the audit's 18.8%), H(C|Y) 3.343 nats against H(C) 3.563; the 16x16 grid this folder actually trains has 30.12% and 2.377 nats against H(C) 2.55 (193 of 256 cells populated, top cell 26.66% of the pixels). Two things this pins down. The 18.8% the audit published is the 32x32 grid it analysed, so route B is quoted against 30.12% here. And these bound a *lookup table* - chroma predicted from one 64-bin number per pixel - not a network, which sees full resolution luminance and a neighbourhood; route B's validation cross-entropy is allowed to land under 2.377 nats and when it does, that is the result, not a contradiction. The only hard ceiling here is the 31.54 dB of the binned truth above, which no decoder restricted to bin centres can pass.
+[ok] Y is copied, not predicted: with a deliberately non-zero head (|chroma| up to 11.6 of 128, colourfulness 0.023 against the photos' own 0.0402), the decoded photo's luminance equals the input Y on the 95.5% of pixels where no channel was cut, to a maximum drift of 3.05e-05 of 255; the other 4.5% go out of gamut, where the clip legitimately moves Y - the check is non-vacuous in both directions
+[ok] control: shuffled: 20.41 dB against gray's 26.94 - a paired deficit of 6.53 dB (95% CI 3.51 to 10.30, 3.7 sems), losing 83/100 photos and winning 14/100; its colourfulness is 0.0374, the same chroma as the truth itself, just in the wrong place. So the metric is not rewarding colourfulness as such
+[ok] control: rolled: 25.74 dB against gray's 26.94 - a paired deficit of 1.21 dB (95% CI 0.70 to 1.67, 4.8 sems), losing 74/100 photos and winning 23/100; its colourfulness is 0.0379, the same chroma as the truth itself, just in the wrong place. So the metric is not rewarding colourfulness as such
+[ok] the datasets and no-augmentation: x (1, 64, 64) torch.float32 in [0.137, 0.912]; A target (2, 64, 64) within +-1 (|max| 0.350); B target (64, 64) int64 in [0, 256); two reads of one photo are identical, and the flip arm flips x and y together and leaves colourfulness alone to 1e-9; the batch helpers equal the stacked single-photo helpers exactly and both single helpers refuse a stack
+[ok] gamma is inference-only: on a constructed log p where the modal cell 120 (p = 0.267) leads the rarest cell 0 (p = 2.58e-08) by 2.42 nats, argmax p keeps 120 and argmax (log p - 0.3 log pbar) hands the pixel to 0: the pull does change decisions, and it changes them towards rare bins. Note the size of the lever - at gamma = 0.3 the rarest cell is worth 4.8 nats more than the modal one, so gamma is a strong knob and calibrate.py will choose it on a curve, not by taste. On this untrained model, whose p is the prior at every pixel, the pull moves 0 of 32768 pixel bins (0 is right here) and leaves all 76 parameter tensors bit-identical
+[ok] timing: 0.18 s and 0.24 s per training batch of 32 for route A and B at widths [16,32,64] (3 warm-up batches discarded), i.e. about 53 s and 70 s per epoch of the 9469 training photos on 6 CPU threads
+[ok] every call binds: 240 calls to this folder's own helpers across 13 scripts, each bound against the real signature of the function it names (arguments not evaluated, so nothing ran), plus every `name.attribute` in those scripts against the imports the file actually has. This is not theoretical: `figs.legend_on` was declared with a leading argument none of its three call sites passed, and `train_task6.py` only said so two minutes in, after it had trained route A and written half its output
+wrote task6_figcheck_mdfxxqpi\photos_smoke_synthetic.png
+wrote task6_figcheck_mdfxxqpi\chroma_support_smoke_synthetic.png
+wrote task6_figcheck_mdfxxqpi\quintiles_smoke_synthetic.png
+[ok] the figures draw: chroma_support_smoke_synthetic.png, photos_smoke_synthetic.png, quintiles_smoke_synthetic.png out of task6_figcheck_mdfxxqpi (deleted), 85-557 KB, drawn from 8 synthetic photos through the same three functions `evaluate_task6.py` calls after it scores the test split - including the chroma figure's two awkward cases: gray, whose chroma is a delta function at the origin and is therefore drawn off the shared log scale rather than allowed to flatten every other panel, and the rule-ET5 photo picker, which on these random photos finds no exactly-grey one and takes its fallback (second dullest)
+
+smoke test passed: 18 checks.
+(16 s; nothing was trained to produce any of the above, and the two models built here were thrown away)
+# [2/7] done in 0.3 min  ->  results/smoke_log.txt
+
+####################################################################################################
+# [3/7] the choices sweep on the validation split
+#   utf8 validate_choices.py
+####################################################################################################
+TASK 6 SPECIFICATION - colourisation from luminance
+====================================================================================================
+| | A - regression | B / B+ - bins |
+| --- | --- | --- |
+| network input (shape) | `(B, 1, 64, 64)` float32 in [0, 1]: the luminance `Y = rgb @ [0.299, 0.587, 0.114] / 255` of the 64x64 centre crop - one channel, and the *same* Y that defines the target | same |
+| network output (shape) | `(B, 2, 64, 64)`: (Cb, Cr) with neutral at 0, in units of +-128 (divide by 128, so the target sits inside +-0.13 and a zero-initialised head starts exactly at the gray baseline) | `(B, 256, 64, 64)` logits: a 16x16 grid on (Cb, Cr). Not 36 bins - a 36-colour vocabulary caps the PSNR at 22.3 dB with a perfect classifier |
+| last layer | 1x1 conv, **no activation**. RGB is rebuilt as `rgb = ycc_inv(Y, 128 * out)` with **Y written back unchanged**, then clamped to [0, 255] | 1x1 conv to 256 channels; the softmax lives inside the loss. **B** = `argmax p`; **B+** = `argmax(log p - gamma * log pbar)` at inference only |
+| training loss | **L1** on the two chroma planes, plus **one scalar alpha calibrated on valid** (the uncalibrated optimum keeps 29% of the colour, which *is* the task's "dull brownish gray") | cross-entropy on the 256 bin labels, unweighted. The prior pull belongs at inference only |
+| evaluation metric | PSNR (per photo, each photo clipped at 40 dB, with median and pooled beside it), chroma L1, colourfulness - from one function, `metrics.score` - plus photos beating gray and the split by colour quintile | the same three, plus top-1 bin accuracy **only ever against its ceiling at this grid - 30.1%, measured on the training photos by `metrics.ceilings`; the audit's better-known 18.8% is the same lookup table at a 32x32 chroma grid** - and that ceiling bounds a colour *lookup table* (chroma read off one 64-bin number per pixel), not a network, so beating it is a result rather than a contradiction. Never a headline on its own |
+| baseline | the gray input (chroma = 0), conventions attached: test 25.36 dB mean, 23.21 median, 24.06 clipped at 40, 21.11 pooled, chroma L1 0.0804, colourfulness 0.0000 | the same baseline, plus the ceiling of the binned truth at 256 bins (31.54 dB on the 100 valid photos) - the one hard ceiling here: no decoder that can only emit bin centres passes it |
+
+Assumptions behind the table:
+  * the input is the photo's own luminance and the output is added to it; the network
+    never predicts Y, so 99% of the signal cannot be damaged by it (spec item 2);
+  * colourfulness means mean |chroma| over pixels and channels, /255 - the definition
+    whose value on the real photos is the task's 0.04 (it gives 0.0407);
+  * no colour augmentation exists in this pipeline: jitter, channel shuffle and
+    autocontrast would edit the target (spec item 8);
+  * `valid` (100 photos, the handout's split) decides every choice; `valrest` (the 3325
+    photos the handout leaves unused) is a confirmation column only; `test` (500) is
+    read once, by evaluate_task6.py, and decides nothing.
+
+The constants the code enforces rather than restates:
+  chroma units (neutral 0, +-128)    colorspace.CHROMA_SCALE    128.0
+  bin grid (route B)                 colorspace.GRID            16
+  bins = grid squared                grid x grid                256
+  PSNR clip per photo, dB            metrics.CLIP_DB            40.0
+  MSE floor (sets the 120 dB ceiling) metrics.EPS                1e-12
+  luminance weights                  colorspace.Y_W             [0.29899999499320984, 0.5870000123977661, 0.11400000005960464]
+  bootstrap draws / seed             metrics.DRAWS / SEED       (2000, 0)
+
+Selection rules R1-R5 are in this file's docstring, written before the first arm ran. Nothing below re-writes them.
+
+subset (2367, 64, 64, 3) of 9469 training photos, fixed for every arm; scored on the 100 validation photos; route-B prior entropy 2.5501 nats, its modal cell 26.7% of pixels
+budget: epochs 4/6/4 for stages 1/2/3
+
+====================================================================================================
+STAGE 1 - width and learning rate, 2367 photos, 4 epochs, 12 arms
+====================================================================================================
+  1/A w16-32-64 lr0.003               117410 p  loss 0.07613 @ep 4    24.54 dB  0.011 cf [ 1.0 min]
+  1/A w16-32-64 lr0.01                117410 p  loss 0.07808 @ep 1    24.51 dB  0.009 cf [ 1.0 min]
+  1/A w32-64-128 lr0.003              467266 p  loss 0.07722 @ep 4    24.35 dB  0.012 cf [ 2.7 min]
+  1/A w32-64-128 lr0.01               467266 p  loss 0.07810 @ep 1    24.61 dB  0.006 cf [ 2.7 min]
+  1/A w16-32-64-128 lr0.003           483170 p  loss 0.07733 @ep 3    24.62 dB  0.009 cf [ 1.2 min]
+  1/A w16-32-64-128 lr0.01            483170 p  loss 0.07765 @ep 3    24.52 dB  0.011 cf [ 1.2 min]
+  1/B w16-32-64 lr0.003               121728 p  loss 2.31804 @ep 4    23.16 dB  0.032 cf [ 1.3 min]
+  1/B w16-32-64 lr0.01                121728 p  loss 2.39396 @ep 2    23.02 dB  0.031 cf [ 1.3 min]
+  1/B w32-64-128 lr0.003              475648 p  loss 2.32281 @ep 4    23.05 dB  0.033 cf [ 2.9 min]
+  1/B w32-64-128 lr0.01               475648 p  loss 2.35853 @ep 2    23.09 dB  0.030 cf [ 2.9 min]
+  1/B w16-32-64-128 lr0.003           487488 p  loss 2.35732 @ep 2    23.09 dB  0.030 cf [ 1.5 min]
+  1/B w16-32-64-128 lr0.01            487488 p  loss 2.33603 @ep 4    23.02 dB  0.031 cf [ 1.5 min]
+  -> stage 1 keeps route A: 1/A w16-32-64 lr0.003 (117410 parameters, loss 0.07613)
+  -> stage 1 keeps route B: 1/B w16-32-64 lr0.003 (121728 parameters, loss 2.31804)
+
+====================================================================================================
+STAGE 2 - batch size, flip arm, and route B's pixel count, 6 epochs
+====================================================================================================
+  2/A b32 flip0                       117410 p  loss 0.07605 @ep 5    24.48 dB  0.012 cf [ 1.5 min]
+  2/A b32 flip1                       117410 p  loss 0.07547 @ep 5    24.60 dB  0.011 cf [ 1.5 min]  flip
+  2/A b64 flip0                       117410 p  loss 0.07632 @ep 2    24.47 dB  0.013 cf [ 1.6 min]
+  2/A b64 flip1                       117410 p  loss 0.07501 @ep 4    24.55 dB  0.014 cf [ 1.6 min]  flip
+  2/B b32 flip0                       121728 p  loss 2.30922 @ep 5    23.14 dB  0.034 cf [ 1.9 min]
+  2/B b32 flip1                       121728 p  loss 2.30092 @ep 6    23.08 dB  0.034 cf [ 1.9 min]  flip
+  2/B b64 flip0                       121728 p  loss 2.28967 @ep 6    23.22 dB  0.032 cf [ 2.0 min]
+  2/B b64 flip1                       121728 p  loss 2.32392 @ep 4    23.13 dB  0.031 cf [ 2.0 min]  flip
+  2/B pixels512                       121728 p  loss 2.30341 @ep 6    23.23 dB  0.032 cf [ 1.7 min]
+  2/B pixels1024                      121728 p  loss 2.29639 @ep 6    23.24 dB  0.032 cf [ 1.9 min]
+  2/B pixelsall                       121728 p  loss 2.29729 @ep 6    23.21 dB  0.032 cf [ 3.3 min]  full-pixel
+  -> stage 2 keeps route A: batch 64, flip True (loss 0.07501; the same arm without the flip 0.07632)
+  -> stage 2 keeps route B: batch 64, flip False (loss 2.28967; the same arm with the flip 2.32392)
+  -> stage 2 keeps route B pixels = 1024 (loss 2.29639, 1.9 min for 6 epochs at this subset)
+
+====================================================================================================
+STAGE 3 - three seeds of the chosen configuration, 4 epochs (rule R4's yardstick)
+====================================================================================================
+  3/A seed0                           117410 p  loss 0.07685 @ep 3    24.41 dB  0.013 cf [ 1.0 min]
+  3/A seed1                           117410 p  loss 0.07617 @ep 4    24.67 dB  0.011 cf [ 1.0 min]
+  3/A seed2                           117410 p  loss 0.07792 @ep 2    24.12 dB  0.015 cf [ 1.0 min]
+  3/B seed0                           121728 p  loss 2.36206 @ep 2    23.12 dB  0.030 cf [ 1.3 min]
+  3/B seed1                           121728 p  loss 2.35911 @ep 3    22.97 dB  0.031 cf [ 1.3 min]
+  3/B seed2                           121728 p  loss 2.33734 @ep 3    23.13 dB  0.033 cf [ 1.3 min]
+  -> route A: across seeds, best validation loss sd 0.00088 (1.15% of the loss) and valid colourfulness sd 0.0022 (16.6% of its value). Rule R4: stage-1/2 differences below 2 of these are reported as ties.
+  -> route B: across seeds, best validation loss sd 0.01350 (0.57% of the loss) and valid colourfulness sd 0.0011 (3.6% of its value). Rule R4: stage-1/2 differences below 2 of these are reported as ties.
+
+wrote results/choices.json (29 arms in 48.9 min)
+wrote figures\choices.png
+
+Nothing above touched a test photo. The only arrays any arm ever saw were the fixed training subset and the 100 validation photos; the 500 test photos and the 3325 unused val photos were never put into a dataset by this script.
+# [3/7] done in 49.0 min  ->  results/sweep_log.txt
+
+####################################################################################################
+# [4/7] train both routes on all 9469 training photos
+#   utf8 train_task6.py
+####################################################################################################
+TASK 6 SPECIFICATION - colourisation from luminance
+====================================================================================================
+| | A - regression | B / B+ - bins |
+| --- | --- | --- |
+| network input (shape) | `(B, 1, 64, 64)` float32 in [0, 1]: the luminance `Y = rgb @ [0.299, 0.587, 0.114] / 255` of the 64x64 centre crop - one channel, and the *same* Y that defines the target | same |
+| network output (shape) | `(B, 2, 64, 64)`: (Cb, Cr) with neutral at 0, in units of +-128 (divide by 128, so the target sits inside +-0.13 and a zero-initialised head starts exactly at the gray baseline) | `(B, 256, 64, 64)` logits: a 16x16 grid on (Cb, Cr). Not 36 bins - a 36-colour vocabulary caps the PSNR at 22.3 dB with a perfect classifier |
+| last layer | 1x1 conv, **no activation**. RGB is rebuilt as `rgb = ycc_inv(Y, 128 * out)` with **Y written back unchanged**, then clamped to [0, 255] | 1x1 conv to 256 channels; the softmax lives inside the loss. **B** = `argmax p`; **B+** = `argmax(log p - gamma * log pbar)` at inference only |
+| training loss | **L1** on the two chroma planes, plus **one scalar alpha calibrated on valid** (the uncalibrated optimum keeps 29% of the colour, which *is* the task's "dull brownish gray") | cross-entropy on the 256 bin labels, unweighted. The prior pull belongs at inference only |
+| evaluation metric | PSNR (per photo, each photo clipped at 40 dB, with median and pooled beside it), chroma L1, colourfulness - from one function, `metrics.score` - plus photos beating gray and the split by colour quintile | the same three, plus top-1 bin accuracy **only ever against its ceiling at this grid - 30.1%, measured on the training photos by `metrics.ceilings`; the audit's better-known 18.8% is the same lookup table at a 32x32 chroma grid** - and that ceiling bounds a colour *lookup table* (chroma read off one 64-bin number per pixel), not a network, so beating it is a result rather than a contradiction. Never a headline on its own |
+| baseline | the gray input (chroma = 0), conventions attached: test 25.36 dB mean, 23.21 median, 24.06 clipped at 40, 21.11 pooled, chroma L1 0.0804, colourfulness 0.0000 | the same baseline, plus the ceiling of the binned truth at 256 bins (31.54 dB on the 100 valid photos) - the one hard ceiling here: no decoder that can only emit bin centres passes it |
+
+Assumptions behind the table:
+  * the input is the photo's own luminance and the output is added to it; the network
+    never predicts Y, so 99% of the signal cannot be damaged by it (spec item 2);
+  * colourfulness means mean |chroma| over pixels and channels, /255 - the definition
+    whose value on the real photos is the task's 0.04 (it gives 0.0407);
+  * no colour augmentation exists in this pipeline: jitter, channel shuffle and
+    autocontrast would edit the target (spec item 8);
+  * `valid` (100 photos, the handout's split) decides every choice; `valrest` (the 3325
+    photos the handout leaves unused) is a confirmation column only; `test` (500) is
+    read once, by evaluate_task6.py, and decides nothing.
+
+The constants the code enforces rather than restates:
+  chroma units (neutral 0, +-128)    colorspace.CHROMA_SCALE    128.0
+  bin grid (route B)                 colorspace.GRID            16
+  bins = grid squared                grid x grid                256
+  PSNR clip per photo, dB            metrics.CLIP_DB            40.0
+  MSE floor (sets the 120 dB ceiling) metrics.EPS                1e-12
+  luminance weights                  colorspace.Y_W             [0.29899999499320984, 0.5870000123977661, 0.11400000005960464]
+  bootstrap draws / seed             metrics.DRAWS / SEED       (2000, 0)
+
+AS BUILT - every hyperparameter chosen on the validation split
+----------------------------------------------------------------------------------------------------
+  data               imagenette2-160, the notebook's data cell: short side 64 with BICUBIC, central 64x64, seed-0 permutation of val/
+  input / target     Y/255 -> (Cb, Cr)/128 for A; the same Y -> the 16x16 bin index for B
+  network A          UNet(dim=2, c_in=1, c_out=2, widths=[16, 32, 64]), zeroed 1x1 head
+  network B          UNet(dim=2, c_in=1, c_out=256, widths=[16, 32, 64]), head bias = log(train bin marginal)
+  loss               A: L1 on both chroma planes;  B: cross-entropy on the bin labels over 1024 sampled pixels per photo per step
+  optimizer          Adam, as in the notebook's `train`
+  epochs             A: budget 16, not trained yet;  B: budget 16, not trained yet
+  flip arm           A: True, B: False (measured as an arm, not assumed)
+  alpha (route A)    not calibrated yet - rule CA in calibrate.py
+  gamma (route B+)   not calibrated yet - the same rule CA, on valid
+  seed               0
+  selected on        validation loss for the epoch; the 100 validation photos for alpha, gamma, width, lr, batch, pixels; the test split for nothing
+
+using results/choices.json: {"A": {"widths": [16, 32, 64], "lr": 0.003, "batch_size": 64, "flip": true, "pixels": null}, "B": {"widths": [16, 32, 64], "lr": 0.003, "batch_size": 64, "flip": false, "pixels": 1024}}
+
+the split this script is allowed to see: train and valid. (500 test photos exist and are not loaded into any dataset here.)
+route B prior: 2.5501 nats entropy, modal cell 26.66% of the training pixels, 256 of 256 cells populated
+
+route A: UNet(dim=2, c_in=1, c_out=2, widths=[16, 32, 64]), 117410 parameters
+  9469 training photos, flip=True, lr=0.003, batch=64, loss = L1 on (Cb, Cr)/128
+    epoch   1/16  train 0.08087  valid 0.08734  valid PSNR 23.78 dB, colourful 0.021  [61 s]
+    epoch   2/16  train 0.07889  valid 0.07588  valid PSNR 24.45 dB, colourful 0.013  [60 s]
+    epoch   3/16  train 0.07766  valid 0.07666  valid PSNR 24.54 dB, colourful 0.011  [60 s]
+    epoch   4/16  train 0.07698  valid 0.07457  valid PSNR 24.64 dB, colourful 0.014  [59 s]
+    epoch   5/16  train 0.07689  valid 0.07572  valid PSNR 24.54 dB, colourful 0.017  [60 s]
+    epoch   6/16  train 0.07619  valid 0.07382  valid PSNR 24.66 dB, colourful 0.015  [61 s]
+    epoch   7/16  train 0.07597  valid 0.07392  valid PSNR 24.67 dB, colourful 0.015  [64 s]
+    epoch   8/16  train 0.07548  valid 0.07601  valid PSNR 24.40 dB, colourful 0.013  [61 s]
+    epoch   9/16  train 0.07522  valid 0.07638  valid PSNR 24.28 dB, colourful 0.022  [62 s]
+    epoch  10/16  train 0.07508  valid 0.07635  valid PSNR 24.39 dB, colourful 0.020  [61 s]
+    epoch  11/16  train 0.07499  valid 0.07338  valid PSNR 24.72 dB, colourful 0.014  [62 s]
+    epoch  12/16  train 0.07456  valid 0.07379  valid PSNR 24.75 dB, colourful 0.012  [61 s]
+    epoch  13/16  train 0.07449  valid 0.07593  valid PSNR 24.57 dB, colourful 0.014  [61 s]
+    epoch  14/16  train 0.07425  valid 0.07129  valid PSNR 24.79 dB, colourful 0.018  [61 s]
+    epoch  15/16  train 0.07424  valid 0.07426  valid PSNR 24.72 dB, colourful 0.014  [61 s]
+    epoch  16/16  train 0.07397  valid 0.07718  valid PSNR 24.44 dB, colourful 0.021  [61 s]
+    16 epochs in 974 s; best validation loss 0.07129 at epoch 14
+  wrote model_A.pt  (117410 parameters, route A, widths [16, 32, 64])
+wrote figures\training_curve_A.png
+  route A on valid, uncalibrated: 24.79 dB mean against gray's 26.94, colourfulness 0.0182 against the photos' own 0.0402, beating gray on 66.0% of the 100
+
+route B: UNet(dim=2, c_in=1, c_out=256, widths=[16, 32, 64]), 121728 parameters
+  9469 training photos, flip=False, lr=0.003, batch=64, loss = cross-entropy on 256 bins over 1024 sampled pixels per photo per step, head bias = log(train marginal)
+    epoch   1/16  train 2.41984  valid 2.30733  valid PSNR 23.17 dB, colourful 0.032  [74 s]
+    epoch   2/16  train 2.34881  valid 2.33332  valid PSNR 23.06 dB, colourful 0.031  [74 s]
+    epoch   3/16  train 2.32098  valid 2.28901  valid PSNR 23.02 dB, colourful 0.034  [75 s]
+    epoch   4/16  train 2.29924  valid 2.27388  valid PSNR 23.21 dB, colourful 0.032  [74 s]
+    epoch   5/16  train 2.27894  valid 2.28702  valid PSNR 22.86 dB, colourful 0.033  [74 s]
+    epoch   6/16  train 2.26428  valid 2.21915  valid PSNR 23.38 dB, colourful 0.031  [74 s]
+    epoch   7/16  train 2.25378  valid 2.31410  valid PSNR 22.48 dB, colourful 0.037  [74 s]
+    epoch   8/16  train 2.24848  valid 2.25419  valid PSNR 23.15 dB, colourful 0.031  [75 s]
+    epoch   9/16  train 2.23639  valid 2.26264  valid PSNR 22.85 dB, colourful 0.035  [75 s]
+    epoch  10/16  train 2.23078  valid 2.22035  valid PSNR 23.11 dB, colourful 0.031  [74 s]
+    epoch  11/16  train 2.22727  valid 2.20195  valid PSNR 23.04 dB, colourful 0.033  [74 s]
+    epoch  12/16  train 2.21730  valid 2.38535  valid PSNR 23.14 dB, colourful 0.031  [74 s]
+    epoch  13/16  train 2.21011  valid 2.20349  valid PSNR 23.17 dB, colourful 0.035  [75 s]
+    epoch  14/16  train 2.20859  valid 2.21221  valid PSNR 23.11 dB, colourful 0.035  [75 s]
+    epoch  15/16  train 2.20374  valid 2.21346  valid PSNR 23.25 dB, colourful 0.032  [74 s]
+    epoch  16/16  train 2.19920  valid 2.15919  valid PSNR 23.42 dB, colourful 0.034  [74 s]
+    16 epochs in 1191 s; best validation loss 2.15919 at epoch 16
+  wrote model_B.pt  (121728 parameters, route B, widths [16, 32, 64])
+wrote figures\training_curve_B.png
+  route B on valid, uncalibrated: 23.42 dB mean against gray's 26.94, colourfulness 0.0337 against the photos' own 0.0402, beating gray on 47.0% of the 100
+
+wrote results/train_log.json and results/model_*.pt in 36.2 min
+next: python calibrate.py (alpha and gamma, on valid), then python evaluate_task6.py (the one look at test)
+# [4/7] done in 36.2 min  ->  results/train_log.txt
+
+####################################################################################################
+# [5/7] calibrate alpha and gamma on valid
+#   utf8 calibrate.py
+####################################################################################################
+TASK 6 SPECIFICATION - colourisation from luminance
+====================================================================================================
+| | A - regression | B / B+ - bins |
+| --- | --- | --- |
+| network input (shape) | `(B, 1, 64, 64)` float32 in [0, 1]: the luminance `Y = rgb @ [0.299, 0.587, 0.114] / 255` of the 64x64 centre crop - one channel, and the *same* Y that defines the target | same |
+| network output (shape) | `(B, 2, 64, 64)`: (Cb, Cr) with neutral at 0, in units of +-128 (divide by 128, so the target sits inside +-0.13 and a zero-initialised head starts exactly at the gray baseline) | `(B, 256, 64, 64)` logits: a 16x16 grid on (Cb, Cr). Not 36 bins - a 36-colour vocabulary caps the PSNR at 22.3 dB with a perfect classifier |
+| last layer | 1x1 conv, **no activation**. RGB is rebuilt as `rgb = ycc_inv(Y, 128 * out)` with **Y written back unchanged**, then clamped to [0, 255] | 1x1 conv to 256 channels; the softmax lives inside the loss. **B** = `argmax p`; **B+** = `argmax(log p - gamma * log pbar)` at inference only |
+| training loss | **L1** on the two chroma planes, plus **one scalar alpha calibrated on valid** (the uncalibrated optimum keeps 29% of the colour, which *is* the task's "dull brownish gray") | cross-entropy on the 256 bin labels, unweighted. The prior pull belongs at inference only |
+| evaluation metric | PSNR (per photo, each photo clipped at 40 dB, with median and pooled beside it), chroma L1, colourfulness - from one function, `metrics.score` - plus photos beating gray and the split by colour quintile | the same three, plus top-1 bin accuracy **only ever against its ceiling at this grid - 30.1%, measured on the training photos by `metrics.ceilings`; the audit's better-known 18.8% is the same lookup table at a 32x32 chroma grid** - and that ceiling bounds a colour *lookup table* (chroma read off one 64-bin number per pixel), not a network, so beating it is a result rather than a contradiction. Never a headline on its own |
+| baseline | the gray input (chroma = 0), conventions attached: test 25.36 dB mean, 23.21 median, 24.06 clipped at 40, 21.11 pooled, chroma L1 0.0804, colourfulness 0.0000 | the same baseline, plus the ceiling of the binned truth at 256 bins (31.54 dB on the 100 valid photos) - the one hard ceiling here: no decoder that can only emit bin centres passes it |
+
+Assumptions behind the table:
+  * the input is the photo's own luminance and the output is added to it; the network
+    never predicts Y, so 99% of the signal cannot be damaged by it (spec item 2);
+  * colourfulness means mean |chroma| over pixels and channels, /255 - the definition
+    whose value on the real photos is the task's 0.04 (it gives 0.0407);
+  * no colour augmentation exists in this pipeline: jitter, channel shuffle and
+    autocontrast would edit the target (spec item 8);
+  * `valid` (100 photos, the handout's split) decides every choice; `valrest` (the 3325
+    photos the handout leaves unused) is a confirmation column only; `test` (500) is
+    read once, by evaluate_task6.py, and decides nothing.
+
+The constants the code enforces rather than restates:
+  chroma units (neutral 0, +-128)    colorspace.CHROMA_SCALE    128.0
+  bin grid (route B)                 colorspace.GRID            16
+  bins = grid squared                grid x grid                256
+  PSNR clip per photo, dB            metrics.CLIP_DB            40.0
+  MSE floor (sets the 120 dB ceiling) metrics.EPS                1e-12
+  luminance weights                  colorspace.Y_W             [0.29899999499320984, 0.5870000123977661, 0.11400000005960464]
+  bootstrap draws / seed             metrics.DRAWS / SEED       (2000, 0)
+
+AS BUILT - every hyperparameter chosen on the validation split
+----------------------------------------------------------------------------------------------------
+  data               imagenette2-160, the notebook's data cell: short side 64 with BICUBIC, central 64x64, seed-0 permutation of val/
+  input / target     Y/255 -> (Cb, Cr)/128 for A; the same Y -> the 16x16 bin index for B
+  network A          UNet(dim=2, c_in=1, c_out=2, widths=[16, 32, 64]), zeroed 1x1 head
+  network B          UNet(dim=2, c_in=1, c_out=256, widths=[16, 32, 64]), head bias = log(train bin marginal)
+  loss               A: L1 on both chroma planes;  B: cross-entropy on the bin labels over 1024 sampled pixels per photo per step
+  optimizer          Adam, as in the notebook's `train`
+  epochs             A: 14 kept of 16 trained (best validation loss 0.07129, 16.2 min);  B: 16 kept of 16 trained (best validation loss 2.15919, 19.9 min)
+  flip arm           A: True, B: False (measured as an arm, not assumed)
+  alpha (route A)    not calibrated yet - rule CA in calibrate.py
+  gamma (route B+)   not calibrated yet - the same rule CA, on valid
+  seed               0
+  selected on        validation loss for the epoch; the 100 validation photos for alpha, gamma, width, lr, batch, pixels; the test split for nothing
+
+calibrating on the 100 validation photos; their own colourfulness is 0.0402, the floor is 0.5 x that = 0.0201; gray scores 26.94 dB
+
+ROUTE A - alpha over 41 values, chosen 1.15 by rule CA (PSNR subject to the floor)
+
+       x    PSNR  clip40  pooled  chromaL1  colourful  hue err  beats gray
+    0.00   26.94   24.45   21.06    0.0804     0.0000    96.60        0.0%
+    0.10   25.26   24.67   21.23    0.0783     0.0018    45.40       83.0%
+    0.20   25.22   24.85   21.39    0.0766     0.0036    45.40       82.0%
+    0.30   25.22   24.96   21.53    0.0750     0.0054    45.40       80.0%
+    0.40   25.22   25.04   21.66    0.0737     0.0073    45.40       78.0%
+    0.50   25.20   25.08   21.77    0.0727     0.0091    45.40       77.0%
+    0.60   25.16   25.07   21.86    0.0720     0.0109    45.40       75.0%
+    0.70   25.09   25.02   21.93    0.0715     0.0127    45.40       74.0%
+    0.80   25.01   24.96   21.99    0.0713     0.0145    45.40       73.0%
+    0.90   24.91   24.87   22.02    0.0713     0.0163    45.40       69.0%
+    1.00   24.79   24.76   22.03    0.0715     0.0182    45.40       66.0%
+    1.10   24.65   24.62   22.02    0.0720     0.0200    45.40       65.0%
+    1.20   24.48   24.46   21.98    0.0728     0.0218    45.40       59.0%
+    1.30   24.30   24.28   21.93    0.0737     0.0235    45.40       58.0%
+    1.40   24.10   24.09   21.86    0.0749     0.0253    45.30       55.0%
+    1.50   23.91   23.90   21.77    0.0762     0.0271    45.30       54.0%
+    1.60   23.70   23.70   21.66    0.0777     0.0288    45.30       48.0%
+    1.70   23.50   23.50   21.54    0.0794     0.0306    45.20       46.0%
+    1.80   23.29   23.29   21.41    0.0812     0.0323    45.20       42.0%
+    1.90   23.08   23.08   21.26    0.0831     0.0341    45.20       40.0%
+    2.00   22.87   22.87   21.11    0.0850     0.0358    45.20       39.0%
+
+ROUTE B - gamma over 21 values, chosen 0.0 by rule CA
+  the accuracy ceiling at this grid is 30.12% - accuracy is reported against it and never alone
+
+   gamma    PSNR  clip40  pooled  chromaL1  colourful  hue err  beats gray   bin acc
+    0.00   23.42   23.42   21.58    0.0865     0.0337    46.30       47.0%    31.66%  <- chosen
+    0.10   23.40   23.40   21.59    0.0864     0.0345    45.90       47.0%    31.67%
+    0.20   23.35   23.35   21.60    0.0864     0.0355    45.60       48.0%    31.62%
+    0.30   23.27   23.27   21.58    0.0865     0.0367    45.20       47.0%    31.52%
+    0.40   23.09   23.09   21.51    0.0870     0.0383    44.70       43.0%    31.33%
+    0.50   22.72   22.72   21.29    0.0886     0.0409    44.10       40.0%    30.67%
+    0.60   21.76   21.76   20.59    0.0943     0.0467    43.80       29.0%    29.22%
+    0.70   18.75   18.75   17.91    0.1218     0.0669    42.20       16.0%    25.09%
+    0.80   15.86   15.86   15.04    0.1706     0.0981    39.70       11.0%    19.40%
+    0.90   13.67   13.67   12.99    0.2218     0.1273    38.80        5.0%    14.64%
+    1.00   10.81   10.81   10.47    0.3163     0.1728    48.40        0.0%     9.37%
+wrote figures\calibration.png
+
+CHOSEN: alpha = 1.15 gives 24.56 dB at colourfulness 0.0209; gamma = 0.0 gives 23.42 dB at 0.0337; gray is 26.94 dB at colourfulness 0.
+  route A, chosen (CA: PSNR subject to the colourfulness floor) alpha 1.15   24.56 dB, colourful 0.0209
+  route A, unconstrained per-photo PSNR                         alpha 0.0    26.94 dB, colourful 0.0000
+  route A, pooled PSNR                                          alpha 1.0    24.79 dB, colourful 0.0182
+  route A, clipped-at-40 dB PSNR                                alpha 0.5    25.20 dB, colourful 0.0091
+  route A, minimum chroma L1                                    alpha 0.8    25.01 dB, colourful 0.0145
+  route A, maximum hue accuracy (min hue error)                 alpha 1.7    23.50 dB, colourful 0.0306
+  route B, chosen (CA: PSNR subject to the colourfulness floor) gamma 0.0    23.42 dB, colourful 0.0337
+  route B, unconstrained per-photo PSNR                         gamma 0.0    23.42 dB, colourful 0.0337
+  route B, pooled PSNR                                          gamma 0.2    23.35 dB, colourful 0.0355
+  route B, clipped-at-40 dB PSNR                                gamma 0.0    23.42 dB, colourful 0.0337
+  route B, minimum chroma L1                                    gamma 0.1    23.40 dB, colourful 0.0345
+  route B, maximum hue accuracy (min hue error)                 gamma 0.85   14.63 dB, colourful 0.1137
+
+wrote results/calibration.json (0.8 min)
+next: python evaluate_task6.py --valid   (a dry run on valid, then the real thing)
+# [5/7] done in 0.8 min  ->  results/calibrate_log.txt
+
+####################################################################################################
+# [6/7] evaluate on valid (dry run)
+#   utf8 evaluate_task6.py --valid --no-valrest
+####################################################################################################
+TASK 6 SPECIFICATION - colourisation from luminance
+====================================================================================================
+| | A - regression | B / B+ - bins |
+| --- | --- | --- |
+| network input (shape) | `(B, 1, 64, 64)` float32 in [0, 1]: the luminance `Y = rgb @ [0.299, 0.587, 0.114] / 255` of the 64x64 centre crop - one channel, and the *same* Y that defines the target | same |
+| network output (shape) | `(B, 2, 64, 64)`: (Cb, Cr) with neutral at 0, in units of +-128 (divide by 128, so the target sits inside +-0.13 and a zero-initialised head starts exactly at the gray baseline) | `(B, 256, 64, 64)` logits: a 16x16 grid on (Cb, Cr). Not 36 bins - a 36-colour vocabulary caps the PSNR at 22.3 dB with a perfect classifier |
+| last layer | 1x1 conv, **no activation**. RGB is rebuilt as `rgb = ycc_inv(Y, 128 * out)` with **Y written back unchanged**, then clamped to [0, 255] | 1x1 conv to 256 channels; the softmax lives inside the loss. **B** = `argmax p`; **B+** = `argmax(log p - gamma * log pbar)` at inference only |
+| training loss | **L1** on the two chroma planes, plus **one scalar alpha calibrated on valid** (the uncalibrated optimum keeps 29% of the colour, which *is* the task's "dull brownish gray") | cross-entropy on the 256 bin labels, unweighted. The prior pull belongs at inference only |
+| evaluation metric | PSNR (per photo, each photo clipped at 40 dB, with median and pooled beside it), chroma L1, colourfulness - from one function, `metrics.score` - plus photos beating gray and the split by colour quintile | the same three, plus top-1 bin accuracy **only ever against its ceiling at this grid - 30.1%, measured on the training photos by `metrics.ceilings`; the audit's better-known 18.8% is the same lookup table at a 32x32 chroma grid** - and that ceiling bounds a colour *lookup table* (chroma read off one 64-bin number per pixel), not a network, so beating it is a result rather than a contradiction. Never a headline on its own |
+| baseline | the gray input (chroma = 0), conventions attached: test 25.36 dB mean, 23.21 median, 24.06 clipped at 40, 21.11 pooled, chroma L1 0.0804, colourfulness 0.0000 | the same baseline, plus the ceiling of the binned truth at 256 bins (31.54 dB on the 100 valid photos) - the one hard ceiling here: no decoder that can only emit bin centres passes it |
+
+Assumptions behind the table:
+  * the input is the photo's own luminance and the output is added to it; the network
+    never predicts Y, so 99% of the signal cannot be damaged by it (spec item 2);
+  * colourfulness means mean |chroma| over pixels and channels, /255 - the definition
+    whose value on the real photos is the task's 0.04 (it gives 0.0407);
+  * no colour augmentation exists in this pipeline: jitter, channel shuffle and
+    autocontrast would edit the target (spec item 8);
+  * `valid` (100 photos, the handout's split) decides every choice; `valrest` (the 3325
+    photos the handout leaves unused) is a confirmation column only; `test` (500) is
+    read once, by evaluate_task6.py, and decides nothing.
+
+The constants the code enforces rather than restates:
+  chroma units (neutral 0, +-128)    colorspace.CHROMA_SCALE    128.0
+  bin grid (route B)                 colorspace.GRID            16
+  bins = grid squared                grid x grid                256
+  PSNR clip per photo, dB            metrics.CLIP_DB            40.0
+  MSE floor (sets the 120 dB ceiling) metrics.EPS                1e-12
+  luminance weights                  colorspace.Y_W             [0.29899999499320984, 0.5870000123977661, 0.11400000005960464]
+  bootstrap draws / seed             metrics.DRAWS / SEED       (2000, 0)
+
+AS BUILT - every hyperparameter chosen on the validation split
+----------------------------------------------------------------------------------------------------
+  data               imagenette2-160, the notebook's data cell: short side 64 with BICUBIC, central 64x64, seed-0 permutation of val/
+  input / target     Y/255 -> (Cb, Cr)/128 for A; the same Y -> the 16x16 bin index for B
+  network A          UNet(dim=2, c_in=1, c_out=2, widths=[16, 32, 64]), zeroed 1x1 head
+  network B          UNet(dim=2, c_in=1, c_out=256, widths=[16, 32, 64]), head bias = log(train bin marginal)
+  loss               A: L1 on both chroma planes;  B: cross-entropy on the bin labels over 1024 sampled pixels per photo per step
+  optimizer          Adam, as in the notebook's `train`
+  epochs             A: 14 kept of 16 trained (best validation loss 0.07129, 16.2 min);  B: 16 kept of 16 trained (best validation loss 2.15919, 19.9 min)
+  flip arm           A: True, B: False (measured as an arm, not assumed)
+  alpha (route A)    1.15 - CA: maximise per-photo mean PSNR subject to colourfulness >= 0.5 x the photos' own
+  gamma (route B+)   0.0 - the same rule CA, on valid
+  seed               0
+  selected on        validation loss for the epoch; the 100 validation photos for alpha, gamma, width, lr, batch, pixels; the test split for nothing
+
+alpha = 1.15 and gamma = 0.0, both chosen on the validation split by rule CA; epochs, widths, learning rates and batch sizes came from results/choices.json. Nothing below can change any of them.
+
+scoring the valid split: 100 photos. DRY RUN on validation photos - the test split is still untouched.
+
+method            PSNR mean       median       clip40       pooled    chroma L1    colourful      hue err beats gray %  bin acc  /lookup
+gray                  26.94        23.95        24.45        21.06       0.0804       0.0000        96.60          0.0        -        -
+A                     24.56        24.57        24.54        22.00       0.0724       0.0209        45.40         63.0        -        -
+B                     23.42        23.74        23.42        21.58       0.0865       0.0337        46.30         47.0    31.66     30.1
+B+                    23.42        23.74        23.42        21.58       0.0865       0.0337        46.30         47.0    31.66     30.1
+binned truth          31.54        31.74        31.54        31.30       0.0345       0.0499         7.30         86.0        -        -
+
+  gray is the baseline the task defines and it is measured here, not quoted: 26.94 dB mean on these 100 photos (the audit's number for this split was 26.94 dB).
+  bin accuracy is printed beside what a colour lookup table scores at this grid (30.12%), never on its own.
+  gamma calibrated to 0, so the B+ row is the B row: argmax p already clears rule CA's colourfulness floor, and every gamma > 0 spends PSNR that nothing asked for. That is rule CA's measured outcome, not an arm that was skipped - the whole gamma curve is in results/calibration.json and figures/calibration.png, and figures/chroma_support_*.png has B and B+ as the same blob, which is what gamma = 0 means.
+  A            against gray: -2.38 dB per photo (sd 15.10, 95% CI -5.45 to +0.25, 1.6 sems), wins 63/100, ties 0
+  B            against gray: -3.52 dB per photo (sd 16.13, 95% CI -6.91 to -0.71, 2.2 sems), wins 47/100, ties 0
+  B+           against gray: -3.52 dB per photo (sd 16.13, 95% CI -6.91 to -0.71, 2.2 sems), wins 47/100, ties 0
+  binned truth against gray: +4.60 dB per photo (sd 18.43, 95% CI +0.75 to +7.83, 2.5 sems), wins 86/100, ties 0
+
+  control shuffled  22.00 dB (-4.94 against gray, 95% CI -8.40 to -2.19), colourfulness 0.0330 - the model's own chroma, in the wrong place
+  control rolled    22.38 dB (-4.56 against gray, 95% CI -7.84 to -1.79), colourfulness 0.0332 - the model's own chroma, in the wrong place
+
+wrote results/metrics_valid_dryrun.json in 0.1 min
+
+figure photos (rule ET5): 9 (most colourful, colourful 0.1691), 61 (among the dullest, colourful 0.0007), 20 (already black and white, colourful 0.0000), 28 (seeded draw 1, colourful 0.0405), 51 (seeded draw 2, colourful 0.0972), 82 (seeded draw 3, colourful 0.0500), 63 (seeded draw 4, colourful 0.0877)
+wrote figures\photos_validation_dry_run.png
+wrote figures\chroma_support_validation_dry_run.png
+wrote figures\quintiles_validation_dry_run.png
+
+WHAT SHOULD CONVINCE US THERE ARE NO MISTAKES, and where each piece lives:
+  * smoke_test.py's 18 checks, run before anything was trained - the metric reproducing the audit's gray baseline to 0.02 dB, the zero-initialised head scoring that baseline exactly, the sampled-pixel head being the same function as the full one, the bin grid reproducing the audit's 31.54 dB ceiling, each control losing to gray by a paired deficit whose 95% interval excludes zero, and every call site in this folder bound against the real signature of the function it names;
+  * every choice measured on the 100 validation photos under rules R1-R5 and CA-CE, written down before the arms ran, with stage 3's seed spread as the yardstick for which differences mean anything;
+  * the two PSNR conventions printed beside each other everywhere, because on this data they disagree about which predictor is better and one number alone would have hidden that;
+  * the valrest column: 3325 photos that influenced nothing, scored by the same code - agreement means the 100 were not a fluke.
+# [6/7] done in 0.2 min  ->  results/eval_valid_log.txt
+
+####################################################################################################
+# [7/7] evaluate on the test split - the one look
+#   utf8 evaluate_task6.py
+####################################################################################################
+TASK 6 SPECIFICATION - colourisation from luminance
+====================================================================================================
+| | A - regression | B / B+ - bins |
+| --- | --- | --- |
+| network input (shape) | `(B, 1, 64, 64)` float32 in [0, 1]: the luminance `Y = rgb @ [0.299, 0.587, 0.114] / 255` of the 64x64 centre crop - one channel, and the *same* Y that defines the target | same |
+| network output (shape) | `(B, 2, 64, 64)`: (Cb, Cr) with neutral at 0, in units of +-128 (divide by 128, so the target sits inside +-0.13 and a zero-initialised head starts exactly at the gray baseline) | `(B, 256, 64, 64)` logits: a 16x16 grid on (Cb, Cr). Not 36 bins - a 36-colour vocabulary caps the PSNR at 22.3 dB with a perfect classifier |
+| last layer | 1x1 conv, **no activation**. RGB is rebuilt as `rgb = ycc_inv(Y, 128 * out)` with **Y written back unchanged**, then clamped to [0, 255] | 1x1 conv to 256 channels; the softmax lives inside the loss. **B** = `argmax p`; **B+** = `argmax(log p - gamma * log pbar)` at inference only |
+| training loss | **L1** on the two chroma planes, plus **one scalar alpha calibrated on valid** (the uncalibrated optimum keeps 29% of the colour, which *is* the task's "dull brownish gray") | cross-entropy on the 256 bin labels, unweighted. The prior pull belongs at inference only |
+| evaluation metric | PSNR (per photo, each photo clipped at 40 dB, with median and pooled beside it), chroma L1, colourfulness - from one function, `metrics.score` - plus photos beating gray and the split by colour quintile | the same three, plus top-1 bin accuracy **only ever against its ceiling at this grid - 30.1%, measured on the training photos by `metrics.ceilings`; the audit's better-known 18.8% is the same lookup table at a 32x32 chroma grid** - and that ceiling bounds a colour *lookup table* (chroma read off one 64-bin number per pixel), not a network, so beating it is a result rather than a contradiction. Never a headline on its own |
+| baseline | the gray input (chroma = 0), conventions attached: test 25.36 dB mean, 23.21 median, 24.06 clipped at 40, 21.11 pooled, chroma L1 0.0804, colourfulness 0.0000 | the same baseline, plus the ceiling of the binned truth at 256 bins (31.54 dB on the 100 valid photos) - the one hard ceiling here: no decoder that can only emit bin centres passes it |
+
+Assumptions behind the table:
+  * the input is the photo's own luminance and the output is added to it; the network
+    never predicts Y, so 99% of the signal cannot be damaged by it (spec item 2);
+  * colourfulness means mean |chroma| over pixels and channels, /255 - the definition
+    whose value on the real photos is the task's 0.04 (it gives 0.0407);
+  * no colour augmentation exists in this pipeline: jitter, channel shuffle and
+    autocontrast would edit the target (spec item 8);
+  * `valid` (100 photos, the handout's split) decides every choice; `valrest` (the 3325
+    photos the handout leaves unused) is a confirmation column only; `test` (500) is
+    read once, by evaluate_task6.py, and decides nothing.
+
+The constants the code enforces rather than restates:
+  chroma units (neutral 0, +-128)    colorspace.CHROMA_SCALE    128.0
+  bin grid (route B)                 colorspace.GRID            16
+  bins = grid squared                grid x grid                256
+  PSNR clip per photo, dB            metrics.CLIP_DB            40.0
+  MSE floor (sets the 120 dB ceiling) metrics.EPS                1e-12
+  luminance weights                  colorspace.Y_W             [0.29899999499320984, 0.5870000123977661, 0.11400000005960464]
+  bootstrap draws / seed             metrics.DRAWS / SEED       (2000, 0)
+
+AS BUILT - every hyperparameter chosen on the validation split
+----------------------------------------------------------------------------------------------------
+  data               imagenette2-160, the notebook's data cell: short side 64 with BICUBIC, central 64x64, seed-0 permutation of val/
+  input / target     Y/255 -> (Cb, Cr)/128 for A; the same Y -> the 16x16 bin index for B
+  network A          UNet(dim=2, c_in=1, c_out=2, widths=[16, 32, 64]), zeroed 1x1 head
+  network B          UNet(dim=2, c_in=1, c_out=256, widths=[16, 32, 64]), head bias = log(train bin marginal)
+  loss               A: L1 on both chroma planes;  B: cross-entropy on the bin labels over 1024 sampled pixels per photo per step
+  optimizer          Adam, as in the notebook's `train`
+  epochs             A: 14 kept of 16 trained (best validation loss 0.07129, 16.2 min);  B: 16 kept of 16 trained (best validation loss 2.15919, 19.9 min)
+  flip arm           A: True, B: False (measured as an arm, not assumed)
+  alpha (route A)    1.15 - CA: maximise per-photo mean PSNR subject to colourfulness >= 0.5 x the photos' own
+  gamma (route B+)   0.0 - the same rule CA, on valid
+  seed               0
+  selected on        validation loss for the epoch; the 100 validation photos for alpha, gamma, width, lr, batch, pixels; the test split for nothing
+
+alpha = 1.15 and gamma = 0.0, both chosen on the validation split by rule CA; epochs, widths, learning rates and batch sizes came from results/choices.json. Nothing below can change any of them.
+
+scoring the test split: 500 photos. THIS IS THE ONE LOOK AT THE TEST SPLIT: it happens once and nothing downstream reads it.
+
+method            PSNR mean       median       clip40       pooled    chroma L1    colourful      hue err beats gray %  bin acc  /lookup
+gray                  25.36        23.21        24.05        21.11       0.0813       0.0000        97.00          0.0        -        -
+A                     24.26        24.46        24.25        21.99       0.0744       0.0219        49.90         61.0        -        -
+B                     23.27        23.76        23.27        21.60       0.0871       0.0339        50.10         50.2    32.69     30.1
+B+                    23.27        23.76        23.27        21.60       0.0871       0.0339        50.10         50.2    32.69     30.1
+binned truth          31.52        31.68        31.52        31.32       0.0346       0.0505         7.00         88.0        -        -
+
+  gray is the baseline the task defines and it is measured here, not quoted: 25.36 dB mean on these 500 photos (the audit's number for this split was 25.36 dB).
+  bin accuracy is printed beside what a colour lookup table scores at this grid (30.12%), never on its own.
+  gamma calibrated to 0, so the B+ row is the B row: argmax p already clears rule CA's colourfulness floor, and every gamma > 0 spends PSNR that nothing asked for. That is rule CA's measured outcome, not an arm that was skipped - the whole gamma curve is in results/calibration.json and figures/calibration.png, and figures/chroma_support_*.png has B and B+ as the same blob, which is what gamma = 0 means.
+  A            against gray: -1.10 dB per photo (sd 12.03, 95% CI -2.24 to -0.08, 2.0 sems), wins 305/500, ties 0
+  B            against gray: -2.09 dB per photo (sd 12.20, 95% CI -3.21 to -1.03, 3.8 sems), wins 251/500, ties 0
+  B+           against gray: -2.09 dB per photo (sd 12.20, 95% CI -3.21 to -1.03, 3.8 sems), wins 251/500, ties 0
+  binned truth against gray: +6.17 dB per photo (sd 14.00, 95% CI +4.90 to +7.34, 9.9 sems), wins 440/500, ties 0
+
+  control shuffled  22.19 dB (-3.17 against gray, 95% CI -4.28 to -2.17), colourfulness 0.0330 - the model's own chroma, in the wrong place
+  control rolled    22.44 dB (-2.92 against gray, 95% CI -4.06 to -1.92), colourfulness 0.0332 - the model's own chroma, in the wrong place
+
+confirmation on valrest (3325 photos that decided nothing):
+  gray             25.58 dB  median  23.35  clip40  24.01  colourful 0.0000  beats gray   0.0%
+  A                24.39 dB  median  24.31  clip40  24.37  colourful 0.0221  beats gray  59.8%
+  B                23.36 dB  median  23.65  clip40  23.36  colourful 0.0340  beats gray  49.8%
+  B+               23.36 dB  median  23.65  clip40  23.36  colourful 0.0340  beats gray  49.8%
+  binned truth     31.55 dB  median  31.69  clip40  31.55  colourful 0.0511  beats gray  88.4%
+
+wrote results/metrics_test.json in 2.4 min
+
+figure photos (rule ET5): 164 (most colourful, colourful 0.1701), 210 (among the dullest, colourful 0.0000), 20 (already black and white, colourful 0.0000), 135 (seeded draw 1, colourful 0.0590), 256 (seeded draw 2, colourful 0.0270), 423 (seeded draw 3, colourful 0.0259), 318 (seeded draw 4, colourful 0.0200)
+wrote figures\photos_test.png
+wrote figures\chroma_support_test.png
+wrote figures\quintiles_test.png
+
+WHAT SHOULD CONVINCE US THERE ARE NO MISTAKES, and where each piece lives:
+  * smoke_test.py's 18 checks, run before anything was trained - the metric reproducing the audit's gray baseline to 0.02 dB, the zero-initialised head scoring that baseline exactly, the sampled-pixel head being the same function as the full one, the bin grid reproducing the audit's 31.54 dB ceiling, each control losing to gray by a paired deficit whose 95% interval excludes zero, and every call site in this folder bound against the real signature of the function it names;
+  * every choice measured on the 100 validation photos under rules R1-R5 and CA-CE, written down before the arms ran, with stage 3's seed spread as the yardstick for which differences mean anything;
+  * the two PSNR conventions printed beside each other everywhere, because on this data they disagree about which predictor is better and one number alone would have hidden that;
+  * the valrest column: 3325 photos that influenced nothing, scored by the same code - agreement means the 100 were not a fluke.
+# [7/7] done in 2.5 min  ->  results/eval_test_log.txt
+
+  step script                         min
+     1 col6_data.py                   0.1
+     2 smoke_test.py                  0.3
+     3 validate_choices.py           49.0
+     4 train_task6.py                36.2
+     5 calibrate.py                   0.8
+     6 evaluate_task6.py              0.2
+     7 evaluate_task6.py              2.5
+       total                         89.1
+wall clock 89.1 min
